@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impermanent Loss Calculator — CerberusFX</title>
+<style>
+  :root{
+    --bg:#1E1B2E; --bg2:#332C4D; --card:#F5F2FC; --card-hi:#FCFBFE;
+    --ink:#1E1B2E; --muted:#6E6A83; --muted2:#8A82AD;
+    --accent:#5B3FD6; --accent-dk:#3A2599; --lav:#C9C2E8; --line:#E4DEF4;
+    --green:#2E9E6B; --amber:#FFB020; --red:#D64545; --red-soft:#FF9E9E;
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    background:linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+    color:var(--ink); padding:32px 16px 60px;
+  }
+  .wrap{max-width:960px; margin:0 auto;}
+  .brand{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .mark{display:flex; gap:4px; align-items:flex-end;}
+  .mark span{display:block; width:8px; background:var(--accent); border-radius:3px;}
+  .mark span:nth-child(1){height:14px;}
+  .mark span:nth-child(2){height:22px;}
+  .mark span:nth-child(3){height:17px;}
+  .brand b{color:var(--lav); letter-spacing:2.5px; font-size:14px;}
+  .brand small{color:var(--muted2); letter-spacing:2px; font-size:12px;}
+  h1{color:#fff; font-size:clamp(28px,4vw,42px); margin:18px 0 6px; line-height:1.1;}
+  .sub{color:#c7c1e0; font-size:16px; margin-bottom:28px; max-width:640px;}
+
+  .grid{display:grid; grid-template-columns: 1fr 1fr; gap:20px;}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
+
+  .card{background:var(--card); border-radius:20px; padding:26px; box-shadow:0 20px 40px rgba(0,0,0,.25);}
+  .card h2{font-size:13px; letter-spacing:1.6px; color:var(--muted); margin:0 0 18px; text-transform:uppercase;}
+
+  .field{margin-bottom:18px;}
+  .field label{display:flex; justify-content:space-between; font-size:14px; font-weight:700; margin-bottom:8px;}
+  .field label span.val{color:var(--accent-dk); font-weight:800;}
+  input[type=range]{width:100%; accent-color:var(--accent); height:6px;}
+  .hint{font-size:12.5px; color:var(--muted2); margin-top:4px;}
+
+  .result{background:var(--card); border-radius:20px; padding:28px; margin-top:20px; box-shadow:0 20px 40px rgba(0,0,0,.25);}
+  .result-top{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:20px;}
+  .headline .label{font-size:13px; letter-spacing:1.6px; color:var(--muted); text-transform:uppercase; margin-bottom:6px;}
+  .headline .big{font-size:56px; font-weight:800; color:var(--accent-dk); line-height:1;}
+  .headline .unit{font-size:20px; color:var(--muted2); font-weight:700; margin-left:8px;}
+  .badge{padding:8px 16px; border-radius:999px; font-weight:800; font-size:13px; letter-spacing:.5px;}
+  .badge.green{background:rgba(46,158,107,.15); color:var(--green);}
+  .badge.amber{background:rgba(255,176,32,.18); color:#a86a00;}
+  .badge.red{background:rgba(214,69,69,.15); color:var(--red);}
+
+  .bars{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+  .bar-row{display:grid; grid-template-columns:170px 1fr 90px; align-items:center; gap:10px; font-size:13px;}
+  .bar-row .lbl{color:var(--muted); font-weight:700;}
+  .bar-track{height:14px; background:var(--line); border-radius:7px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:7px;}
+  .bar-row .amt{text-align:right; font-weight:800; color:var(--ink);}
+
+  .tip{
+    margin-top:20px; padding:16px 18px; border-radius:14px; background:rgba(91,63,214,.06);
+    border:1px solid var(--line); font-size:14px; color:#4a4560; line-height:1.55;
+  }
+  .tip b{color:var(--accent-dk);}
+
+  footer{margin-top:34px; text-align:center;}
+  footer a{color:var(--lav); text-decoration:none; font-weight:700; font-size:15px;}
+  footer .sub2{color:var(--muted2); font-size:12.5px; margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="mark"><span></span><span></span><span></span></div>
+    <b>CERBERUSFX</b><small>&nbsp;· FREE TOOL</small>
+  </div>
+  <h1>Impermanent Loss Calculator</h1>
+  <div class="sub">Providing liquidity earns fees, but a price move between your two assets can cost more than those fees bring in. See the real number before you deposit.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Your Position</h2>
+      <div class="field">
+        <label>Price change of Asset A <span class="val" id="v-change">50</span>%</label>
+        <input type="range" id="change" min="-90" max="500" step="5" value="50">
+        <div class="hint">How much Asset A has moved in price relative to Asset B since you deposited. Negative = A dropped.</div>
+      </div>
+      <div class="field">
+        <label>Pool deposit value <span class="val" id="v-deposit">$10,000</span></label>
+        <input type="range" id="deposit" min="100" max="500000" step="100" value="10000">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Fees Earned</h2>
+      <div class="field">
+        <label>Estimated APR from trading fees <span class="val" id="v-apr">15</span>%</label>
+        <input type="range" id="apr" min="0" max="150" step="1" value="15">
+        <div class="hint">Annualized fee income the pool has been generating.</div>
+      </div>
+      <div class="field">
+        <label>Time in the pool <span class="val" id="v-days">90</span> days</label>
+        <input type="range" id="days" min="1" max="730" step="1" value="90">
+      </div>
+    </div>
+  </div>
+
+  <div class="result">
+    <div class="result-top">
+      <div class="headline">
+        <div class="label">Impermanent Loss</div>
+        <div><span class="big" id="out-il">—</span><span class="unit">%</span></div>
+      </div>
+      <div class="badge" id="out-badge">—</div>
+    </div>
+
+    <div class="bars">
+      <div class="bar-row">
+        <div class="lbl">IL vs. just holding</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-il" style="background:var(--red);"></div></div>
+        <div class="amt" id="amt-il">—</div>
+      </div>
+      <div class="bar-row">
+        <div class="lbl">Fees earned</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-fees" style="background:var(--green);"></div></div>
+        <div class="amt" id="amt-fees">—</div>
+      </div>
+      <div class="bar-row">
+        <div class="lbl">Net result</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-net" style="background:var(--accent);"></div></div>
+        <div class="amt" id="amt-net">—</div>
+      </div>
+    </div>
+
+    <div class="tip" id="tip-text"></div>
+  </div>
+
+  <footer>
+    <a href="https://t.me/CerberusFXTrading" target="_blank" rel="noopener">t.me/CerberusFXTrading</a>
+    <div class="sub2">Free tools for traders &amp; builders — no sign-up, runs entirely in your browser.</div>
+  </footer>
+</div>
+
+<script>
+const ids = ['change','deposit','apr','days'];
+const els = {};
+ids.forEach(id => els[id] = document.getElementById(id));
+
+function fmt(n, d=1){ return (Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toString(); }
+function money(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+
+function update(){
+  const changePct = parseFloat(els.change.value);
+  const deposit = parseFloat(els.deposit.value);
+  const apr = parseFloat(els.apr.value);
+  const days = parseFloat(els.days.value);
+
+  document.getElementById('v-change').textContent = (changePct >= 0 ? '+' : '') + fmt(changePct,0);
+  document.getElementById('v-deposit').textContent = money(deposit);
+  document.getElementById('v-apr').textContent = fmt(apr,0);
+  document.getElementById('v-days').textContent = fmt(days,0);
+
+  // Standard constant-product (x*y=k) impermanent loss formula.
+  // priceRatio = new price / old price of asset A relative to B
+  const priceRatio = 1 + (changePct / 100);
+  const safeRatio = Math.max(priceRatio, 0.0001);
+  const sqrtRatio = Math.sqrt(safeRatio);
+  const ilFraction = (2 * sqrtRatio) / (1 + safeRatio) - 1; // negative = loss
+  const ilPct = ilFraction * 100;
+
+  const ilDollar = deposit * ilFraction; // negative number = loss in $
+  const feesDollar = deposit * (apr / 100) * (days / 365);
+  const netDollar = feesDollar + ilDollar;
+
+  document.getElementById('out-il').textContent = fmt(Math.abs(ilPct),2);
+
+  const badge = document.getElementById('out-badge');
+  if (netDollar >= 0){
+    badge.textContent = 'FEES COVER IT';
+    badge.className = 'badge green';
+  } else if (Math.abs(ilPct) < 5){
+    badge.textContent = 'MINOR IL';
+    badge.className = 'badge amber';
+  } else {
+    badge.textContent = 'FEES DON\'T COVER IT';
+    badge.className = 'badge red';
+  }
+
+  const maxScale = Math.max(Math.abs(ilDollar), Math.abs(feesDollar), Math.abs(netDollar), 1);
+  function setBar(barId, amtId, value){
+    const w = Math.min(100, Math.max(0,(Math.abs(value)/maxScale)*100));
+    document.getElementById(barId).style.width = w + '%';
+    const sign = value < 0 ? '-' : '';
+    document.getElementById(amtId).textContent = sign + money(Math.abs(value));
+  }
+  setBar('bar-il','amt-il', ilDollar);
+  setBar('bar-fees','amt-fees', feesDollar);
+  setBar('bar-net','amt-net', netDollar);
+
+  const tip = document.getElementById('tip-text');
+  let msg = '';
+  if (netDollar >= 0){
+    msg = `<b>Fee income currently outweighs the impermanent loss.</b> At ${fmt(apr,0)}% APR over ${fmt(days,0)} days, fees (${money(feesDollar)}) more than offset the ${fmt(Math.abs(ilPct),2)}% IL (${money(Math.abs(ilDollar))}). This can flip fast if the price move continues or fee volume drops — recheck regularly, not just at deposit time.`;
+  } else if (Math.abs(ilPct) < 5){
+    msg = `<b>IL is still small at this price move, but fees aren't keeping pace.</b> You're net ${money(netDollar)} versus simply holding both assets. A larger price divergence from here would compound the loss faster than fees typically can offset it.`;
+  } else {
+    msg = `<b>This is the core LP risk playing out.</b> A ${fmt(changePct,0)}% price move on one asset creates ${fmt(Math.abs(ilPct),2)}% impermanent loss — meaning you'd have been better off just holding both tokens instead of providing liquidity, even after counting the ${money(feesDollar)} in fees earned.`;
+  }
+  msg += ` <br><br>Crypto tip: impermanent loss only becomes "permanent" if you withdraw while the price ratio is still skewed. If prices return to your entry ratio, the loss fully reverses regardless of what happened in between.`;
+  tip.innerHTML = msg;
+}
+
+ids.forEach(id => els[id].addEventListener('input', update));
+update();
+</script>
+</body>
+</html>
