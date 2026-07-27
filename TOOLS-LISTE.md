@@ -13,7 +13,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 1. ✅ **Position Size Calculator** — Lotgröße aus Kontostand, Risiko-% und Stop-Distanz
 2. ⬜ Risk/Reward Calculator — R:R-Verhältnis, Breakeven-Winrate, Erwartungswert
-3. ⬜ Pip Value Calculator — Pip-Wert je Paar, Lotgröße und Kontowährung
+3. ✅ **Pip Value Calculator** — Pip-Wert je Paar, Lotgröße und Kontowährung
 4. ⬜ Drawdown Recovery Calculator — welcher Gewinn nötig ist, um X% Verlust auszugleichen
 5. ⬜ Prop Firm Challenge Planner — Tagesziele, Max-Drawdown-Puffer, realistische Dauer
 6. ⬜ Expectancy Calculator — Erwartungswert pro Trade aus Winrate und Ø-Gewinn/Verlust
@@ -51,7 +51,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 ## Business & Freelance (33–44)
 
-33. ⬜ Break-Even Calculator — Fixkosten, Deckungsbeitrag, Break-even in Stück und Umsatz
+33. ✅ **Break-Even Calculator** — Fixkosten, Deckungsbeitrag, Break-even in Stück und Umsatz
 34. ⬜ Service Pricing Calculator — Stundensatz aus Wunschgewinn, Auslastung und Fixkosten
 35. ⬜ Client Profitability Calculator — welcher Kunde nach Zeitaufwand wirklich lohnt
 36. ⬜ Price Increase Simulator — wie viele Kunden du verlieren darfst und trotzdem gewinnst
@@ -133,6 +133,11 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 86. ⬜ Pre-Trade Checklist Tool — durchklickbare Checkliste vor Orderausführung
 87. ⬜ Screen Time / Chart-Watching Tracker — Zeit vor Charts vs. tatsächliche Trade-Anzahl
 
+## Neu hinzugefügt (88–89)
+
+88. ⬜ Position Size Scaling Planner — wie Lotgröße mit wachsendem Konto sinnvoll skaliert, ohne Risiko-% zu ändern
+89. ⬜ Freelance Rate Increase Letter Helper — sachliche Formulierungshilfe plus Zahlenbegründung für eine Preiserhöhung ggü. Bestandskunden
+
 ---
 
 ## Content-Ideen ohne eigenes HTML-Tool (separat, andere Kategorie)
@@ -163,6 +168,8 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 | Deep Work Capacity Planner | 10076682 | 29.07. 06:03 |
 | Impermanent Loss Calculator | 10077489 | 29.07. 14:03 |
 | Revenge Trading Cooldown Timer | 10077529 | 29.07. 17:02 |
+| Pip Value Calculator | 10078546 | 30.07. 10:53 |
+| Break-Even Calculator | 10078558 | 31.07. 17:07 |
 
 ## Workflow (fix)
 
@@ -171,4 +178,4 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 87 Tool-Einträge über 8 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 89 Tool-Einträge über 8 Kategorien vorrätig, reicht für Wochen im Voraus)
