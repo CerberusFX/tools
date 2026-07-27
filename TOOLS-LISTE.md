@@ -77,7 +77,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 ## Krypto (51–58)
 
-51. ⬜ Impermanent Loss Calculator — Verlust ggü. Halten bei Liquidity-Pool-Positionen
+51. ✅ **Impermanent Loss Calculator** — Verlust ggü. Halten bei Liquidity-Pool-Positionen
 52. ⬜ Staking Yield Calculator — effektive APY nach Lock-up, Slashing-Risiko, Compound-Frequenz
 53. ⬜ DCA vs. Lump Sum Simulator — Durchschnittspreis-Strategie vs. Einmalanlage im Vergleich
 54. ⬜ Gas Fee Impact Calculator — wie stark Netzwerkgebühren kleine Trades auffressen
@@ -126,7 +126,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 *(Verhaltens-/Prozess-Tools mit Zahlen-Output — bewusst kein Gesundheits-/Mental-Health-Framing)*
 
-82. ⬜ Revenge Trading Cooldown Timer — Zwangspause nach Verlust-Trade, konfigurierbar
+82. ✅ **Revenge Trading Cooldown Timer** — Zwangspause nach Verlust-Trade, konfigurierbar
 83. ⬜ Overtrading Frequency Checker — Trades/Tag vs. eigenem Durchschnitt, Warnschwelle
 84. ⬜ Trading Journal Discipline Score — Konsistenz von Plan-Einhaltung über Zeit
 85. ⬜ Rule-Break Cost Calculator — was das Abweichen vom eigenen Plan historisch gekostet hat
@@ -161,6 +161,8 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 | Late Invoice Fee Calculator | 10076821 | 28.07. 11:58 |
 | Weekly Task Batching Planner | 10076861 | 28.07. 17:04 |
 | Deep Work Capacity Planner | 10076682 | 29.07. 06:03 |
+| Impermanent Loss Calculator | 10077489 | 29.07. 14:03 |
+| Revenge Trading Cooldown Timer | 10077529 | 29.07. 17:02 |
 
 ## Workflow (fix)
 
