@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Position Size Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .modes{display:flex;gap:6px;background:var(--panel);padding:4px;border-radius:10px;margin-bottom:18px}
+  .modes button{
+    flex:1;border:none;background:transparent;font-family:inherit;font-size:12.5px;font-weight:600;
+    color:var(--muted);padding:8px 4px;border-radius:7px;cursor:pointer
+  }
+  .modes button.active{background:var(--white);color:var(--accent-d);box-shadow:0 1px 3px rgba(30,27,46,.12)}
+
+  .field{margin-bottom:16px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:120px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .bigunit{font-size:.45em;font-weight:700;color:#C9C2E8;margin-left:8px;letter-spacing:0}
+  .dirchip{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:700;
+    background:rgba(255,255,255,.12);color:#C9C2E8}
+  .warnchip{display:inline-block;margin-top:10px;margin-left:8px;padding:5px 12px;border-radius:20px;
+    font-size:12.5px;font-weight:700;background:rgba(214,69,69,.2);color:#FF9E9E}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.gain{color:var(--green);font-weight:700}
+  td.rr{color:var(--accent-d);font-weight:600}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Position Size Calculator</h1>
+    <p class="sub">Work out your lot size from the risk you've decided to take — before the trade, not after it goes wrong.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="modes" role="group" aria-label="Instrument type">
+        <button type="button" id="mode_fx" class="active">Forex</button>
+        <button type="button" id="mode_gen">Stocks / Crypto / Indices</button>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="balance"><span>Account balance</span>
+          <span class="val"><input type="number" id="balance" value="10000" min="0" max="100000000" step="100"><span class="unit">$</span></span>
+        </label>
+        <input type="range" id="balance_r" value="10000" min="0" max="200000" step="500" aria-label="Account balance slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="risk"><span>Risk per trade</span>
+          <span class="val"><input type="number" id="risk" value="1" min="0" max="20" step="0.1"><span class="unit">%</span></span>
+        </label>
+        <input type="range" id="risk_r" value="1" min="0.1" max="5" step="0.1" aria-label="Risk per trade slider">
+        <p class="hint">Most risk frameworks keep this at or under 1–2% per trade.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="entry"><span>Entry price</span>
+          <span class="val"><input type="number" id="entry" value="1.08500" min="0" step="0.00001"></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="stop"><span>Stop loss price</span>
+          <span class="val"><input type="number" id="stop" value="1.08000" min="0" step="0.00001"></span>
+        </label>
+        <p class="hint" id="dirhint">Stop below entry = long. Stop above entry = short.</p>
+      </div>
+
+      <div class="field" id="f_pipsize">
+        <label class="flabel" for="pipsize"><span>Pip size</span>
+          <span class="val"><input type="number" id="pipsize" value="0.0001" min="0.000001" step="0.00001"></span>
+        </label>
+        <p class="hint">0.0001 for most pairs, 0.01 for JPY pairs.</p>
+      </div>
+
+      <div class="field" id="f_pipvalue">
+        <label class="flabel" for="pipvalue"><span>Pip value per standard lot</span>
+          <span class="val"><input type="number" id="pipvalue" value="10" min="0.01" step="0.01"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">$10 for USD-quoted pairs (EURUSD, GBPUSD). Check your broker for others.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="target"><span>Take profit (optional)</span>
+          <span class="val"><input type="number" id="target" value="1.09500" min="0" step="0.00001"></span>
+        </label>
+        <p class="hint">Leave at 0 to skip the reward calculation.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">POSITION SIZE</p>
+        <p class="big"><span id="size">—</span><span class="bigunit" id="sizeunit">lots</span></p>
+        <span class="dirchip" id="dirchip">—</span><span id="warnslot"></span>
+        <div class="split">
+          <div>
+            <p class="k">Risking</p>
+            <p class="v" id="riskamt">—</p>
+          </div>
+          <div>
+            <p class="k">Stop distance</p>
+            <p class="v" id="stopdist">—</p>
+          </div>
+          <div>
+            <p class="k">Position value</p>
+            <p class="v" id="notional">—</p>
+          </div>
+          <div>
+            <p class="k">Reward / Risk</p>
+            <p class="v" id="rr">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>If price reaches your targets</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Target</th><th>Price</th><th>Profit</th><th>Account</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Forex:</b> risk amount = balance × risk%. Stop distance in pips = |entry − stop| ÷ pip size.
+        Lots = risk amount ÷ (stop pips × pip value per lot).<br><br>
+        <b>Stocks / Crypto / Indices:</b> units = risk amount ÷ |entry − stop|. Position value = units × entry.<br><br>
+        This assumes your stop actually fills at your stop price. In fast markets it may not — slippage and
+        gaps can push your real loss beyond the number shown here. Spread and commission are not included.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Position sizing math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  var $ = function(id){return document.getElementById(id);};
+  var mode = 'fx';
+
+  var pairs = [['balance','balance_r'],['risk','risk_r']];
+  pairs.forEach(function(p){
+    var n = $(p[0]), r = $(p[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, r.min), r.max);
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  });
+  ['entry','stop','pipsize','pipvalue','target'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  $('mode_fx').addEventListener('click', function(){ setMode('fx'); });
+  $('mode_gen').addEventListener('click', function(){ setMode('gen'); });
+
+  function setMode(m){
+    mode = m;
+    $('mode_fx').classList.toggle('active', m==='fx');
+    $('mode_gen').classList.toggle('active', m==='gen');
+    $('f_pipsize').style.display = m==='fx' ? '' : 'none';
+    $('f_pipvalue').style.display = m==='fx' ? '' : 'none';
+    $('sizeunit').textContent = m==='fx' ? 'lots' : 'units';
+    if(m==='gen'){
+      if(parseFloat($('entry').value) < 10){
+        $('entry').value = 100; $('stop').value = 95; $('target').value = 115;
+      }
+    } else {
+      if(parseFloat($('entry').value) > 10){
+        $('entry').value = 1.08500; $('stop').value = 1.08000; $('target').value = 1.09500;
+      }
+    }
+    calc();
+  }
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function calc(){
+    var balance = Math.max(0, num('balance',0));
+    var riskPct = Math.max(0, num('risk',0));
+    var entry = num('entry',0);
+    var stop = num('stop',0);
+    var target = num('target',0);
+
+    var riskAmt = balance * riskPct/100;
+    var dist = Math.abs(entry - stop);
+    var isLong = stop < entry;
+
+    var size = 0, notional = 0, stopLabel = '—', perUnit = 0;
+
+    if(dist <= 0 || entry <= 0){
+      $('size').textContent = '—';
+      $('riskamt').textContent = usd0.format(riskAmt);
+      $('stopdist').textContent = '—';
+      $('notional').textContent = '—';
+      $('rr').textContent = '—';
+      $('dirchip').textContent = 'Set entry and stop';
+      $('warnslot').innerHTML = '';
+      $('tbody').innerHTML = '';
+      $('advice').textContent = 'Enter an entry price and a stop loss price that differ from each other.';
+      return;
+    }
+
+    if(mode === 'fx'){
+      var pipSize = Math.max(0.000001, num('pipsize',0.0001));
+      var pipVal = Math.max(0.01, num('pipvalue',10));
+      var pips = dist / pipSize;
+      size = riskAmt / (pips * pipVal);
+      perUnit = pips * pipVal;          // loss per 1 lot
+      notional = size * 100000 * entry;
+      stopLabel = pips.toFixed(1) + ' pips';
+      $('size').textContent = size.toFixed(2);
+    } else {
+      size = riskAmt / dist;
+      perUnit = dist;                    // loss per 1 unit
+      notional = size * entry;
+      stopLabel = dist.toFixed(dist < 1 ? 4 : 2) + ' pts';
+      $('size').textContent = size >= 100 ? Math.round(size).toLocaleString('en-US') : size.toFixed(2);
+    }
+
+    $('riskamt').textContent = usd0.format(riskAmt);
+    $('stopdist').textContent = stopLabel;
+    $('notional').textContent = usd0.format(notional);
+    $('dirchip').textContent = isLong ? 'LONG' : 'SHORT';
+
+    $('warnslot').innerHTML = riskPct > 2
+      ? '<span class="warnchip">' + riskPct + '% is above the usual 1–2% guideline</span>'
+      : '';
+
+    var rrText = '—';
+    var rMultiple = 0;
+    if(target > 0){
+      var tDist = isLong ? (target - entry) : (entry - target);
+      if(tDist > 0){
+        rMultiple = tDist / dist;
+        rrText = rMultiple.toFixed(2) + ' : 1';
+      } else {
+        rrText = 'Target on wrong side';
+      }
+    }
+    $('rr').textContent = rrText;
+
+    // targets table
+    var rows = [];
+    var levels = [1,2,3];
+    if(rMultiple > 0 && levels.indexOf(Math.round(rMultiple*100)/100) === -1){
+      levels.push(Math.round(rMultiple*100)/100);
+      levels.sort(function(a,b){return a-b;});
+    }
+    levels.forEach(function(R){
+      var price = isLong ? entry + R*dist : entry - R*dist;
+      var profit = riskAmt * R;
+      var acct = balance + profit;
+      var isYours = rMultiple>0 && Math.abs(R - rMultiple) < 0.005;
+      var label = (isYours ? 'Your TP · ' : '') + R.toFixed(R % 1 === 0 ? 0 : 2) + 'R';
+      rows.push('<tr><td class="rr">'+label+'</td><td>'+fmtPrice(price)+'</td><td class="gain">+'+usd0.format(profit)+
+                '</td><td>'+usd0.format(acct)+'</td></tr>');
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    // advice line
+    var breakeven = rMultiple>0 ? (1/(1+rMultiple)*100) : null;
+    if(breakeven !== null){
+      $('advice').innerHTML = 'At ' + rMultiple.toFixed(2) + ':1, you only need to win <b>' +
+        breakeven.toFixed(1) + '%</b> of these trades to break even. Below that win rate, this setup loses money over time.';
+    } else {
+      $('advice').innerHTML = 'Add a take profit price to see the reward/risk ratio and the win rate you would need to break even.';
+    }
+  }
+
+  function fmtPrice(p){
+    if(p >= 1000) return p.toFixed(2);
+    if(p >= 10) return p.toFixed(2);
+    return p.toFixed(5);
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
