@@ -67,7 +67,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 ## Produktivität & Sonstiges (45–50)
 
 45. ⬜ Time Value Calculator — was deine Stunde wert ist, und ab wann Auslagern lohnt
-46. ⬜ Meeting Cost Calculator — Kosten eines Meetings nach Teilnehmern und Gehältern
+46. ✅ **Meeting Cost Calculator** — Kosten eines Meetings nach Teilnehmern und Gehältern
 47. ⬜ Focus Session Timer — Pomodoro-Varianten mit Tagesstatistik
 48. ⬜ Habit Streak Tracker — einfacher Streak-Zähler mit Verlaufsansicht
 49. ⬜ Deadline Countdown Planner — Meilensteine rückwärts von einem Enddatum geplant
@@ -78,7 +78,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 ## Krypto (51–58)
 
 51. ✅ **Impermanent Loss Calculator** — Verlust ggü. Halten bei Liquidity-Pool-Positionen
-52. ⬜ Staking Yield Calculator — effektive APY nach Lock-up, Slashing-Risiko, Compound-Frequenz
+52. ✅ **Staking Yield Calculator** — effektive APY nach Lock-up, Slashing-Risiko, Compound-Frequenz
 53. ⬜ DCA vs. Lump Sum Simulator — Durchschnittspreis-Strategie vs. Einmalanlage im Vergleich
 54. ⬜ Gas Fee Impact Calculator — wie stark Netzwerkgebühren kleine Trades auffressen
 55. ⬜ Portfolio Rebalancing Tool — Zielgewichtung vs. aktuelle Allokation, nötige Trades
@@ -133,10 +133,12 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 86. ⬜ Pre-Trade Checklist Tool — durchklickbare Checkliste vor Orderausführung
 87. ⬜ Screen Time / Chart-Watching Tracker — Zeit vor Charts vs. tatsächliche Trade-Anzahl
 
-## Neu hinzugefügt (88–89)
+## Weitere Ideen (88–91)
 
 88. ⬜ Position Size Scaling Planner — wie Lotgröße mit wachsendem Konto sinnvoll skaliert, ohne Risiko-% zu ändern
 89. ⬜ Freelance Rate Increase Letter Helper — sachliche Formulierungshilfe plus Zahlenbegründung für eine Preiserhöhung ggü. Bestandskunden
+90. ⬜ Async vs. Meeting Cost Comparator — was eine Status-Frage als Meeting vs. als Slack-Nachricht/Doc tatsächlich kostet
+91. ⬜ DCA Staking Blend Planner — wie regelmäßiges Nachkaufen plus Staking-Rendite zusammen den Ø-Einstiegspreis und Ertrag verschieben
 
 ---
 
@@ -170,6 +172,8 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 | Revenge Trading Cooldown Timer | 10077529 | 29.07. 17:02 |
 | Pip Value Calculator | 10078546 | 30.07. 10:53 |
 | Break-Even Calculator | 10078558 | 31.07. 17:07 |
+| Staking Yield Calculator | 10083330 | 01.08. 12:02 |
+| Meeting Cost Calculator | 10083333 | 02.08. 16:56 |
 
 ## Workflow (fix)
 
@@ -178,4 +182,4 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 89 Tool-Einträge über 8 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 91 Tool-Einträge über 8 Kategorien vorrätig, reicht für Wochen im Voraus)
