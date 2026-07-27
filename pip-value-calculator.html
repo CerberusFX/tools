@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pip Value Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:16px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:120px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val select{
+    width:170px;font-size:13.5px;font-weight:600;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:7px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .bigunit{font-size:.45em;font-weight:700;color:#C9C2E8;margin-left:8px;letter-spacing:0}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.gain{color:var(--green);font-weight:700}
+  td.loss{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Pip Value Calculator</h1>
+    <p class="sub">Know exactly what one pip is worth on your pair, your lot size, and your account currency — before you size the trade.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="pair"><span>Currency pair</span>
+          <span class="val">
+            <select id="pair">
+              <option value="0.0001|1.08000" data-jpy="0">EUR/USD</option>
+              <option value="0.0001|1.27000" data-jpy="0">GBP/USD</option>
+              <option value="0.01|151.000" data-jpy="1">USD/JPY</option>
+              <option value="0.0001|0.66000" data-jpy="0">AUD/USD</option>
+              <option value="0.0001|1.36000" data-jpy="0">USD/CAD</option>
+              <option value="0.0001|0.88000" data-jpy="0">USD/CHF</option>
+              <option value="0.01|172.000" data-jpy="1">EUR/JPY</option>
+              <option value="0.01|191.000" data-jpy="1">GBP/JPY</option>
+              <option value="custom" data-jpy="0">Custom pair</option>
+            </select>
+          </span>
+        </label>
+        <p class="hint">Pick a pair for typical values, or choose Custom to enter your own.</p>
+      </div>
+
+      <div class="field" id="f_custompip" style="display:none">
+        <label class="flabel" for="pipsize"><span>Pip size</span>
+          <span class="val"><input type="number" id="pipsize" value="0.0001" min="0.000001" step="0.00001"></span>
+        </label>
+        <p class="hint">0.0001 for most pairs, 0.01 for JPY pairs.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="rate"><span>Exchange rate</span>
+          <span class="val"><input type="number" id="rate" value="1.08000" min="0.00001" step="0.00001"></span>
+        </label>
+        <p class="hint" id="ratehint">Current quote for the pair, e.g. EUR/USD = 1.08000.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="lotsize"><span>Position size</span>
+          <span class="val"><input type="number" id="lotsize" value="1" min="0.01" step="0.01"><span class="unit">lots</span></span>
+        </label>
+        <input type="range" id="lotsize_r" value="1" min="0.01" max="10" step="0.01" aria-label="Position size slider">
+        <p class="hint">1.00 = standard lot (100,000 units), 0.10 = mini, 0.01 = micro.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="acccur"><span>Account currency</span>
+          <span class="val">
+            <select id="acccur">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="OTHER">Other (assume USD-quoted)</option>
+            </select>
+          </span>
+        </label>
+        <p class="hint">Only matters when your account currency differs from the pair's quote currency.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="pips"><span>Trade size in pips</span>
+          <span class="val"><input type="number" id="pips" value="20" min="0" step="1"><span class="unit">pips</span></span>
+        </label>
+        <input type="range" id="pips_r" value="20" min="0" max="200" step="1" aria-label="Pips slider">
+        <p class="hint">Your stop distance or target distance, in pips.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">VALUE PER PIP</p>
+        <p class="big"><span id="pipval">—</span><span class="bigunit" id="pipvalunit">per pip</span></p>
+        <div class="split">
+          <div>
+            <p class="k">Units traded</p>
+            <p class="v" id="units">—</p>
+          </div>
+          <div>
+            <p class="k">Value per lot</p>
+            <p class="v" id="perlot">—</p>
+          </div>
+          <div>
+            <p class="k">Total move (P/L)</p>
+            <p class="v" id="totalmove">—</p>
+          </div>
+          <div>
+            <p class="k">Pip size used</p>
+            <p class="v" id="pipsizeused">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>What different pip moves are worth</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Pips</th><th>P/L at your lot size</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Standard case (quote currency = account currency):</b> pip value per lot = pip size × lot units
+        (100,000 × lot size). E.g. EUR/USD, account in USD: 0.0001 × 100,000 = $10 per standard lot.<br><br>
+        <b>JPY pairs:</b> pip size is 0.01 instead of 0.0001, so pip value per lot = 0.01 × 100,000 ÷ exchange
+        rate, converted into the quote currency.<br><br>
+        <b>When account currency ≠ quote currency:</b> the raw pip value is converted using the exchange rate
+        entered above. This calculator gives a close approximation — for exact broker figures, check your
+        platform's contract specification, since swap fees, commissions, and rounding vary by broker.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Pip value math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){return document.getElementById(id);};
+
+  function fmt(v, cur){
+    var c = cur || 'USD';
+    try{
+      return new Intl.NumberFormat('en-US',{style:'currency',currency:c,maximumFractionDigits:2}).format(v);
+    }catch(e){
+      return '$' + v.toFixed(2);
+    }
+  }
+
+  $('pair').addEventListener('change', function(){
+    var v = this.value;
+    if(v === 'custom'){
+      $('f_custompip').style.display = '';
+    } else {
+      $('f_custompip').style.display = 'none';
+      var parts = v.split('|');
+      $('pipsize').value = parts[0];
+      $('rate').value = parts[1];
+    }
+    calc();
+  });
+
+  var lotPair = ['lotsize','lotsize_r'];
+  (function(){
+    var n = $(lotPair[0]), r = $(lotPair[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  })();
+
+  var pipPair = ['pips','pips_r'];
+  (function(){
+    var n = $(pipPair[0]), r = $(pipPair[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  })();
+
+  ['pipsize','rate','acccur'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+    $(id).addEventListener('change', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function calc(){
+    var pipSize = Math.max(0.000001, num('pipsize', 0.0001));
+    var rate = Math.max(0.00001, num('rate', 1));
+    var lots = Math.max(0.01, num('lotsize', 1));
+    var pips = Math.max(0, num('pips', 20));
+    var units = lots * 100000;
+    var acccur = $('acccur').value;
+
+    var isJPYish = pipSize >= 0.01;
+    var perLotValue = isJPYish ? (pipSize * 100000) / rate : (pipSize * 100000);
+    var totalPipValue = isJPYish ? (pipSize * units) / rate : (pipSize * units);
+    var totalMove = totalPipValue * pips;
+
+    var curLabel = acccur === 'OTHER' ? 'USD' : acccur;
+
+    $('units').textContent = units.toLocaleString('en-US');
+    $('perlot').textContent = fmt(perLotValue, curLabel === 'EUR' ? 'EUR' : curLabel === 'GBP' ? 'GBP' : 'USD');
+    $('pipval').textContent = fmt(totalPipValue, curLabel === 'EUR' ? 'EUR' : curLabel === 'GBP' ? 'GBP' : 'USD');
+    $('pipvalunit').textContent = 'per pip';
+    $('totalmove').textContent = fmt(totalMove, curLabel === 'EUR' ? 'EUR' : curLabel === 'GBP' ? 'GBP' : 'USD');
+    $('pipsizeused').textContent = pipSize;
+
+    var rows = [];
+    var levels = [10,20,50,100];
+    if(levels.indexOf(pips) === -1){
+      levels.push(pips);
+      levels.sort(function(a,b){return a-b;});
+    }
+    levels.forEach(function(p){
+      var val = totalPipValue * p;
+      var isYours = p === pips;
+      rows.push('<tr><td>'+(isYours?'<b>':'')+p+' pips'+(isYours?' (yours)</b>':'')+'</td><td class="gain">'+
+        fmt(val, curLabel === 'EUR' ? 'EUR' : curLabel === 'GBP' ? 'GBP' : 'USD')+'</td></tr>');
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    $('advice').innerHTML = 'At <b>' + lots.toFixed(2) + ' lots</b>, every pip this pair moves is worth ' +
+      fmt(totalPipValue, curLabel === 'EUR' ? 'EUR' : curLabel === 'GBP' ? 'GBP' : 'USD') +
+      ' to your account. Multiply that by your stop distance in pips to see your real dollar risk before you enter.';
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
