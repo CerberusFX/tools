@@ -75,6 +75,82 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 *(Zusätzlich bereits umgesetzt, nicht in dieser Liste: Deep Work Capacity Planner, Weekly Task Batching Planner — beide als Ergänzung während Claude die Liste noch nicht vollständig kannte)*
 
+## Krypto (51–58)
+
+51. ⬜ Impermanent Loss Calculator — Verlust ggü. Halten bei Liquidity-Pool-Positionen
+52. ⬜ Staking Yield Calculator — effektive APY nach Lock-up, Slashing-Risiko, Compound-Frequenz
+53. ⬜ DCA vs. Lump Sum Simulator — Durchschnittspreis-Strategie vs. Einmalanlage im Vergleich
+54. ⬜ Gas Fee Impact Calculator — wie stark Netzwerkgebühren kleine Trades auffressen
+55. ⬜ Portfolio Rebalancing Tool — Zielgewichtung vs. aktuelle Allokation, nötige Trades
+56. ⬜ Crypto Position Size Calculator — analog zu Forex, aber mit Volatilitäts-Anpassung
+57. ⬜ Stablecoin Yield Comparator — Rendite verschiedener Stablecoin-Strategien nebeneinander
+58. ⬜ Halving Cycle Timeline — historische Abstände, Countdown zum nächsten Event
+
+## Steuern & Buchhaltung (59–66)
+
+59. ⬜ Capital Gains Tax Estimator — Steuerlast auf realisierte Gewinne, kurz- vs. langfristig
+60. ⬜ Quarterly Tax Set-Aside Calculator — wie viel pro Quartal zurücklegen als Selbstständiger
+61. ⬜ Trading Tax Lot Calculator — FIFO vs. LIFO, Auswirkung auf die Steuerlast
+62. ⬜ Home Office Deduction Calculator — absetzbare Fläche und Kosten grob geschätzt
+63. ⬜ Self-Employment Tax Calculator — zusätzliche Abgaben ggü. Angestelltenverhältnis
+64. ⬜ Wash Sale Impact Checker — wie ein zu früher Rückkauf den Verlustvortrag kippt
+65. ⬜ Deductible Expense Tracker — Jahresüberblick absetzbarer Geschäftsausgaben
+66. ⬜ Tax Bracket Visualizer — Grenzsteuersatz vs. Durchschnittssteuersatz anschaulich
+
+*(Hinweis: alle Steuer-Tools liefern nur allgemeine Orientierung, keine Steuerberatung — das im Tool-Footer klar kennzeichnen)*
+
+## Content & Social Growth (67–73)
+
+67. ⬜ Posting Consistency Tracker — Streak und Lücken der eigenen Posting-Frequenz
+68. ⬜ Engagement Rate Calculator — Interaktionen ins Verhältnis zu Reichweite/Followern
+69. ⬜ Content ROI Calculator — investierte Zeit vs. Reichweite/Leads pro Content-Stück
+70. ⬜ Optimal Posting Time Finder — beste Slots nach Zeitzone der Zielgruppe
+71. ⬜ Thread Length Optimizer — Korrelation Tweet-Anzahl vs. Vollständig-Lesen-Quote (Faustregeln)
+72. ⬜ Follower Growth Rate Calculator — Wachstum in % über Zeitraum, Trend-Projektion
+73. ⬜ Hashtag Reach Estimator — grobe Einschätzung des Zusatz-Reach durch Hashtag-Nutzung
+
+## Strategien & Backtesting-Simulatoren (74–81)
+
+*(Wichtig: das sind Simulatoren mit Eingabeparametern, keine echten Backtests mit historischen Kursdaten — im Tool klar so labeln, sonst irreführend)*
+
+74. ⬜ Moving Average Crossover Simulator — erwartetes Verhalten je MA-Kombination und Zeitrahmen
+75. ⬜ Grid Trading Profitability Calculator — Gitterabstand vs. Range vs. nötiges Kapital
+76. ⬜ Martingale/Anti-Martingale Risk Simulator — zeigt konkret das Ruin-Risiko von Progression
+77. ⬜ Scalping vs. Swing Cost Comparator — Spread-/Kommissionsanteil je Handelsstil
+78. ⬜ Trading Style Fit Quiz — welcher Stil passt zu Zeitbudget, Risikotoleranz, Temperament
+79. ⬜ Breakout Strategy Simulator — erwartete Erfolgsquote bei X% Range-Ausbruch (parametrisiert)
+80. ⬜ Support/Resistance Bounce Calculator — historische Faustregeln zur Trefferquote an Levels
+81. ⬜ Trend Following vs. Mean Reversion Simulator — welches Regime aktuell wahrscheinlicher wirkt
+
+## Trading Psychology & Discipline (82–87)
+
+*(Verhaltens-/Prozess-Tools mit Zahlen-Output — bewusst kein Gesundheits-/Mental-Health-Framing)*
+
+82. ⬜ Revenge Trading Cooldown Timer — Zwangspause nach Verlust-Trade, konfigurierbar
+83. ⬜ Overtrading Frequency Checker — Trades/Tag vs. eigenem Durchschnitt, Warnschwelle
+84. ⬜ Trading Journal Discipline Score — Konsistenz von Plan-Einhaltung über Zeit
+85. ⬜ Rule-Break Cost Calculator — was das Abweichen vom eigenen Plan historisch gekostet hat
+86. ⬜ Pre-Trade Checklist Tool — durchklickbare Checkliste vor Orderausführung
+87. ⬜ Screen Time / Chart-Watching Tracker — Zeit vor Charts vs. tatsächliche Trade-Anzahl
+
+---
+
+## Content-Ideen ohne eigenes HTML-Tool (separat, andere Kategorie)
+
+Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den Standard-Tool-Workflow (kein GitHub-Pages-Link nötig). Eigene Rotation, nicht Teil der 50er-Zählung oben.
+
+### MT4 / MQL4 — nutzt bestehende `cerberusfx-mql4`-Historie
+- Kleine, kostenlose EAs als Download (z. B. simpler Session-Filter, News-Filter-EA) — via GitHub-Release statt HTML-Tool
+- "How to install an EA in MT4" — Schritt-für-Schritt-Thread
+- "How to backtest a strategy in MT4 Strategy Tester" — Thread mit Screenshots/Erklärung
+- "Reading MT4 backtest reports correctly" — Profit Factor, Drawdown, Sharpe erklärt
+- "Common MT4 EA mistakes beginners make" — Thread
+
+### Weitere Guide-Ideen
+- "How to read a prop firm's rulebook before signing up"
+- "How to set up a trading journal that actually gets used"
+- "How to choose a broker: red flags checklist"
+
 ---
 
 ## Aktuell geplante Threads (Typefully)
@@ -93,4 +169,4 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 87 Tool-Einträge über 8 Kategorien vorrätig, reicht für Wochen im Voraus)
