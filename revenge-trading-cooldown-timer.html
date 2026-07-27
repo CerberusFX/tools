@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revenge Trading Cooldown Timer — CerberusFX</title>
+<style>
+  :root{
+    --bg:#1E1B2E; --bg2:#332C4D; --card:#F5F2FC; --card-hi:#FCFBFE;
+    --ink:#1E1B2E; --muted:#6E6A83; --muted2:#8A82AD;
+    --accent:#5B3FD6; --accent-dk:#3A2599; --lav:#C9C2E8; --line:#E4DEF4;
+    --green:#2E9E6B; --amber:#FFB020; --red:#D64545; --red-soft:#FF9E9E;
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    background:linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+    color:var(--ink); padding:32px 16px 60px;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+  .brand{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .mark{display:flex; gap:4px; align-items:flex-end;}
+  .mark span{display:block; width:8px; background:var(--accent); border-radius:3px;}
+  .mark span:nth-child(1){height:14px;}
+  .mark span:nth-child(2){height:22px;}
+  .mark span:nth-child(3){height:17px;}
+  .brand b{color:var(--lav); letter-spacing:2.5px; font-size:14px;}
+  .brand small{color:var(--muted2); letter-spacing:2px; font-size:12px;}
+  h1{color:#fff; font-size:clamp(28px,4vw,42px); margin:18px 0 6px; line-height:1.1;}
+  .sub{color:#c7c1e0; font-size:16px; margin-bottom:28px; max-width:620px;}
+
+  .card{background:var(--card); border-radius:20px; padding:26px; box-shadow:0 20px 40px rgba(0,0,0,.25); margin-bottom:20px;}
+  .card h2{font-size:13px; letter-spacing:1.6px; color:var(--muted); margin:0 0 18px; text-transform:uppercase;}
+
+  .field{margin-bottom:18px;}
+  .field label{display:flex; justify-content:space-between; font-size:14px; font-weight:700; margin-bottom:8px;}
+  .field label span.val{color:var(--accent-dk); font-weight:800;}
+  input[type=range]{width:100%; accent-color:var(--accent); height:6px;}
+  .hint{font-size:12.5px; color:var(--muted2); margin-top:4px;}
+
+  .timer-card{background:var(--card); border-radius:20px; padding:36px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,.25);}
+  .timer-display{font-size:72px; font-weight:800; color:var(--accent-dk); font-variant-numeric:tabular-nums; margin:10px 0;}
+  .timer-label{font-size:13px; letter-spacing:1.6px; color:var(--muted); text-transform:uppercase;}
+  .timer-status{font-size:15px; font-weight:700; margin-top:8px;}
+  .timer-status.running{color:var(--red);}
+  .timer-status.done{color:var(--green);}
+  .timer-status.idle{color:var(--muted);}
+
+  .btn-row{display:flex; gap:12px; justify-content:center; margin-top:24px; flex-wrap:wrap;}
+  button{
+    padding:14px 28px; border-radius:12px; border:none; font-weight:800; font-size:15px;
+    cursor:pointer; letter-spacing:.3px;
+  }
+  .btn-start{background:var(--accent); color:#fff;}
+  .btn-start:hover{background:var(--accent-dk);}
+  .btn-reset{background:transparent; border:2px solid var(--line); color:var(--muted);}
+  .btn-reset:hover{border-color:var(--muted2);}
+  button:disabled{opacity:.5; cursor:not-allowed;}
+
+  .checklist{margin-top:24px; text-align:left;}
+  .checklist-item{
+    display:flex; align-items:flex-start; gap:10px; padding:10px 0; font-size:14px; color:#4a4560;
+    border-top:1px solid var(--line);
+  }
+  .checklist-item:first-child{border-top:none;}
+  .checklist-item input{margin-top:3px; accent-color:var(--accent);}
+
+  .tip{
+    margin-top:20px; padding:16px 18px; border-radius:14px; background:rgba(91,63,214,.06);
+    border:1px solid var(--line); font-size:14px; color:#4a4560; line-height:1.55; text-align:left;
+  }
+  .tip b{color:var(--accent-dk);}
+
+  footer{margin-top:34px; text-align:center;}
+  footer a{color:var(--lav); text-decoration:none; font-weight:700; font-size:15px;}
+  footer .sub2{color:var(--muted2); font-size:12.5px; margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="mark"><span></span><span></span><span></span></div>
+    <b>CERBERUSFX</b><small>&nbsp;· FREE TOOL</small>
+  </div>
+  <h1>Revenge Trading Cooldown Timer</h1>
+  <div class="sub">The trade right after a loss is statistically the worst one you'll take. Force a mandatory pause before you're allowed back in — the timer doesn't negotiate.</div>
+
+  <div class="card">
+    <h2>Set Your Cooldown</h2>
+    <div class="field">
+      <label>Cooldown after a losing trade <span class="val" id="v-mins">30</span> minutes</label>
+      <input type="range" id="mins" min="5" max="120" step="5" value="30">
+      <div class="hint">Enough time for the emotional spike to genuinely pass, not just to refresh the chart once.</div>
+    </div>
+    <div class="field">
+      <label>Extra cooldown per consecutive loss <span class="val" id="v-extra">15</span> minutes</label>
+      <input type="range" id="extra" min="0" max="60" step="5" value="15">
+      <div class="hint">Each loss in a row increases the pause — a losing streak is exactly when the urge to "win it back" is strongest.</div>
+    </div>
+  </div>
+
+  <div class="timer-card">
+    <div class="timer-label">Cooldown Remaining</div>
+    <div class="timer-display" id="display">30:00</div>
+    <div class="timer-status idle" id="status">Not started</div>
+
+    <div class="btn-row">
+      <button class="btn-start" id="btn-start">Start Cooldown</button>
+      <button class="btn-reset" id="btn-reset">Reset</button>
+    </div>
+
+    <div class="checklist" id="checklist" style="display:none;">
+      <div class="checklist-item"><input type="checkbox"> I've reviewed why the last trade lost — setup, not emotion</div>
+      <div class="checklist-item"><input type="checkbox"> My position size for the next trade is the same %, not bigger</div>
+      <div class="checklist-item"><input type="checkbox"> I'm trading the next setup because it's valid, not to "get even"</div>
+    </div>
+
+    <div class="tip" id="tip-text"></div>
+  </div>
+
+  <footer>
+    <a href="https://t.me/CerberusFXTrading" target="_blank" rel="noopener">t.me/CerberusFXTrading</a>
+    <div class="sub2">Free tools for traders &amp; builders — no sign-up, runs entirely in your browser.</div>
+  </footer>
+</div>
+
+<script>
+const minsEl = document.getElementById('mins');
+const extraEl = document.getElementById('extra');
+const display = document.getElementById('display');
+const status = document.getElementById('status');
+const btnStart = document.getElementById('btn-start');
+const btnReset = document.getElementById('btn-reset');
+const checklist = document.getElementById('checklist');
+const tip = document.getElementById('tip-text');
+
+let lossStreak = 0;
+let timerInterval = null;
+let remainingSeconds = 0;
+
+function baseSeconds(){
+  return parseInt(minsEl.value) * 60;
+}
+function extraSeconds(){
+  return parseInt(extraEl.value) * 60 * lossStreak;
+}
+function totalSeconds(){
+  return baseSeconds() + extraSeconds();
+}
+
+function fmtTime(s){
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+
+function updateStaticDisplay(){
+  if (!timerInterval){
+    remainingSeconds = totalSeconds();
+    display.textContent = fmtTime(remainingSeconds);
+  }
+  updateTip();
+}
+
+function updateTip(){
+  const streak = lossStreak;
+  let msg = '';
+  if (streak === 0){
+    msg = `<b>No losing streak logged yet.</b> Base cooldown is ${minsEl.value} minutes. Each time you tap "Start Cooldown" after a loss, the streak counter goes up and the wait gets longer — that's intentional.`;
+  } else {
+    msg = `<b>Loss streak: ${streak}.</b> Current cooldown: ${minsEl.value} + (${extraEl.value} × ${streak}) = ${Math.round(totalSeconds()/60)} minutes. The longer wait isn't a punishment — it's exactly when the urge to force a trade back is strongest, and exactly when sizing mistakes happen most.`;
+  }
+  msg += ` <br><br>Trading psychology tip: the goal isn't to never feel the urge to re-enter immediately — it's to have a hard rule that doesn't ask your in-the-moment emotional state for permission.`;
+  tip.innerHTML = msg;
+}
+
+function tick(){
+  remainingSeconds--;
+  display.textContent = fmtTime(Math.max(remainingSeconds,0));
+  if (remainingSeconds <= 0){
+    clearInterval(timerInterval);
+    timerInterval = null;
+    status.textContent = 'Cooldown complete — review the checklist below';
+    status.className = 'timer-status done';
+    checklist.style.display = 'block';
+    btnStart.textContent = 'Start Cooldown';
+    btnStart.disabled = false;
+  }
+}
+
+btnStart.addEventListener('click', () => {
+  if (timerInterval) return;
+  lossStreak += 1;
+  remainingSeconds = totalSeconds();
+  display.textContent = fmtTime(remainingSeconds);
+  status.textContent = 'Cooldown running — step away from the charts';
+  status.className = 'timer-status running';
+  checklist.style.display = 'none';
+  btnStart.disabled = true;
+  updateTip();
+  timerInterval = setInterval(tick, 1000);
+});
+
+btnReset.addEventListener('click', () => {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  lossStreak = 0;
+  remainingSeconds = totalSeconds();
+  display.textContent = fmtTime(remainingSeconds);
+  status.textContent = 'Not started';
+  status.className = 'timer-status idle';
+  checklist.style.display = 'none';
+  btnStart.disabled = false;
+  updateTip();
+});
+
+minsEl.addEventListener('input', () => { document.getElementById('v-mins').textContent = minsEl.value; updateStaticDisplay(); });
+extraEl.addEventListener('input', () => { document.getElementById('v-extra').textContent = extraEl.value; updateStaticDisplay(); });
+
+updateStaticDisplay();
+</script>
+</body>
+</html>
