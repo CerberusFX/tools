@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Break-Even Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:16px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:120px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .bigunit{font-size:.45em;font-weight:700;color:#C9C2E8;margin-left:8px;letter-spacing:0}
+  .warnchip{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:20px;
+    font-size:12.5px;font-weight:700;background:rgba(214,69,69,.2);color:#FF9E9E}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.gain{color:var(--green);font-weight:700}
+  td.loss{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Break-Even Calculator</h1>
+    <p class="sub">Find out exactly how many units or how much revenue you need before your business stops losing money.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="fixed"><span>Fixed costs (monthly)</span>
+          <span class="val"><input type="number" id="fixed" value="4000" min="0" step="50"><span class="unit">$</span></span>
+        </label>
+        <input type="range" id="fixed_r" value="4000" min="0" max="30000" step="100" aria-label="Fixed costs slider">
+        <p class="hint">Rent, salaries, software, tools — costs that don't change with sales volume.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="price"><span>Price per unit</span>
+          <span class="val"><input type="number" id="price" value="50" min="0" step="1"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">What you charge per unit, service session, or client project.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="varcost"><span>Variable cost per unit</span>
+          <span class="val"><input type="number" id="varcost" value="18" min="0" step="1"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">Materials, direct labor, payment fees — costs that scale with each sale.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="target"><span>Target monthly profit (optional)</span>
+          <span class="val"><input type="number" id="target" value="0" min="0" step="50"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">Leave at 0 to see pure break-even. Set a number to see what's needed for that profit.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="current"><span>Current monthly units sold (optional)</span>
+          <span class="val"><input type="number" id="current" value="0" min="0" step="1"></span>
+        </label>
+        <p class="hint">Leave at 0 to skip. Enter a number to see your current margin of safety.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">BREAK-EVEN POINT</p>
+        <p class="big"><span id="beunits">—</span><span class="bigunit">units / month</span></p>
+        <span id="warnslot"></span>
+        <div class="split">
+          <div>
+            <p class="k">Break-even revenue</p>
+            <p class="v" id="berevenue">—</p>
+          </div>
+          <div>
+            <p class="k">Contribution margin</p>
+            <p class="v" id="margin">—</p>
+          </div>
+          <div>
+            <p class="k">Margin ratio</p>
+            <p class="v" id="marginpct">—</p>
+          </div>
+          <div>
+            <p class="k">For target profit</p>
+            <p class="v" id="targetunits">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Profit at different sales volumes</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Units sold</th><th>Revenue</th><th>Profit / Loss</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Contribution margin</b> = price per unit − variable cost per unit. This is what each sale
+        contributes toward covering fixed costs.<br><br>
+        <b>Break-even units</b> = fixed costs ÷ contribution margin. Sell fewer than this and you lose money;
+        sell more and you're profitable.<br><br>
+        <b>Break-even revenue</b> = break-even units × price per unit.<br><br>
+        <b>Units for target profit</b> = (fixed costs + target profit) ÷ contribution margin.<br><br>
+        This model assumes a linear cost structure — variable cost per unit stays constant regardless of volume.
+        In reality, bulk discounts or capacity limits can change that at scale.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Break-even math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var $ = function(id){return document.getElementById(id);};
+
+  var pair = ['fixed','fixed_r'];
+  (function(){
+    var n = $(pair[0]), r = $(pair[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  })();
+
+  ['price','varcost','target','current'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function calc(){
+    var fixed = Math.max(0, num('fixed', 0));
+    var price = Math.max(0, num('price', 0));
+    var varcost = Math.max(0, num('varcost', 0));
+    var target = Math.max(0, num('target', 0));
+    var current = Math.max(0, num('current', 0));
+
+    var margin = price - varcost;
+
+    if(margin <= 0 || price <= 0){
+      $('beunits').textContent = '—';
+      $('berevenue').textContent = '—';
+      $('margin').textContent = usd0.format(margin);
+      $('marginpct').textContent = '—';
+      $('targetunits').textContent = '—';
+      $('warnslot').innerHTML = '<span class="warnchip">Price must exceed variable cost per unit</span>';
+      $('tbody').innerHTML = '';
+      $('advice').textContent = 'Your price per unit needs to be higher than your variable cost per unit, or you lose money on every single sale regardless of volume.';
+      return;
+    }
+
+    var beUnits = fixed / margin;
+    var beRevenue = beUnits * price;
+    var marginPct = (margin / price) * 100;
+    var targetUnits = (fixed + target) / margin;
+
+    $('warnslot').innerHTML = '';
+    $('beunits').textContent = Math.ceil(beUnits).toLocaleString('en-US');
+    $('berevenue').textContent = usd0.format(beRevenue);
+    $('margin').textContent = usd0.format(margin) + ' / unit';
+    $('marginpct').textContent = marginPct.toFixed(1) + '%';
+    $('targetunits').textContent = target > 0 ? Math.ceil(targetUnits).toLocaleString('en-US') + ' units' : '—';
+
+    var rows = [];
+    var points = [0, Math.round(beUnits*0.5), Math.round(beUnits), Math.round(beUnits*1.5), Math.round(beUnits*2)];
+    if(current > 0 && points.indexOf(current) === -1){
+      points.push(current);
+    }
+    points = points.filter(function(v,i,arr){ return arr.indexOf(v) === i; }).sort(function(a,b){return a-b;});
+
+    points.forEach(function(u){
+      var rev = u * price;
+      var profit = rev - varcost*u - fixed;
+      var isYours = current > 0 && u === current;
+      var isBE = u === Math.round(beUnits);
+      var label = u.toLocaleString('en-US') + (isYours ? ' (current)' : '') + (isBE && !isYours ? ' (break-even)' : '');
+      rows.push('<tr><td>'+label+'</td><td>'+usd0.format(rev)+'</td><td class="'+(profit>=0?'gain':'loss')+'">'+
+        (profit>=0?'+':'')+usd0.format(profit)+'</td></tr>');
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    var adviceText = 'Sell <b>' + Math.ceil(beUnits).toLocaleString('en-US') + ' units</b> a month ('+usd0.format(beRevenue)+' revenue) just to cover your fixed costs. ' +
+      'Every unit after that adds ' + usd0.format(margin) + ' of pure profit.';
+
+    if(current > 0){
+      var diff = current - beUnits;
+      if(diff >= 0){
+        adviceText += ' At your current ' + current.toLocaleString('en-US') + ' units/month, you are ' +
+          Math.floor(diff).toLocaleString('en-US') + ' units above break-even — a margin of safety of ' +
+          ((diff/current)*100).toFixed(1) + '%.';
+      } else {
+        adviceText += ' At your current ' + current.toLocaleString('en-US') + ' units/month, you are ' +
+          Math.ceil(-diff).toLocaleString('en-US') + ' units short of break-even.';
+      }
+    }
+    $('advice').innerHTML = adviceText;
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
