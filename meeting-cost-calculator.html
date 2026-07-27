@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting Cost Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:16px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:120px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .bigunit{font-size:.45em;font-weight:700;color:#C9C2E8;margin-left:8px;letter-spacing:0}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.gain{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Meeting Cost Calculator</h1>
+    <p class="sub">See what a meeting actually costs in salary dollars, per session and per year — before you schedule the next recurring one.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="attendees"><span>Number of attendees</span>
+          <span class="val"><input type="number" id="attendees" value="8" min="1" max="500" step="1"></span>
+        </label>
+        <input type="range" id="attendees_r" value="8" min="1" max="50" step="1" aria-label="Attendees slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="salary"><span>Average annual salary</span>
+          <span class="val"><input type="number" id="salary" value="75000" min="0" step="1000"><span class="unit">$</span></span>
+        </label>
+        <input type="range" id="salary_r" value="75000" min="20000" max="300000" step="1000" aria-label="Average salary slider">
+        <p class="hint">Rough average across the people in the room.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="hours"><span>Work hours per week</span>
+          <span class="val"><input type="number" id="hours" value="40" min="1" max="80" step="1"></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="overhead"><span>Overhead multiplier</span>
+          <span class="val"><input type="number" id="overhead" value="1.25" min="1" max="2" step="0.05"><span class="unit">×</span></span>
+        </label>
+        <p class="hint">Accounts for benefits, taxes, and office costs on top of base salary. 1.25 is a common rough estimate.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="duration"><span>Meeting length</span>
+          <span class="val"><input type="number" id="duration" value="60" min="5" max="480" step="5"><span class="unit">min</span></span>
+        </label>
+        <input type="range" id="duration_r" value="60" min="15" max="180" step="5" aria-label="Duration slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="freq"><span>Recurs how often?</span>
+          <span class="val"><input type="number" id="freq" value="1" min="0" max="365" step="1"><span class="unit">/wk</span></span>
+        </label>
+        <p class="hint">Times per week this meeting repeats. Set to 0 for a one-off meeting.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">COST OF THIS MEETING</p>
+        <p class="big"><span id="cost">—</span></p>
+        <div class="split">
+          <div>
+            <p class="k">Cost per minute</p>
+            <p class="v" id="perminute">—</p>
+          </div>
+          <div>
+            <p class="k">Blended hourly rate/person</p>
+            <p class="v" id="hourlyrate">—</p>
+          </div>
+          <div>
+            <p class="k">Weekly cost (if recurring)</p>
+            <p class="v" id="weekly">—</p>
+          </div>
+          <div>
+            <p class="k">Annual cost (if recurring)</p>
+            <p class="v" id="annual">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>What that annual cost could otherwise fund</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>If cut instead</th><th>Equivalent to</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Hourly rate</b> = annual salary ÷ (work hours per week × 48 working weeks/year).<br><br>
+        <b>Burdened rate</b> = hourly rate × overhead multiplier, to roughly account for benefits, payroll taxes,
+        and office overhead beyond base salary.<br><br>
+        <b>Meeting cost</b> = burdened rate × attendees × (meeting length in minutes ÷ 60).<br><br>
+        <b>Annual cost</b> multiplies this by how many times per week it recurs × 48 weeks. This is a rough
+        estimate for decision-making, not precise payroll accounting — actual costs vary by benefits structure,
+        contractor vs. employee status, and real hours worked per year.</p>
+      </details>
+
+      <footer>
+        <span>Rough estimate, not payroll accounting.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  var $ = function(id){return document.getElementById(id);};
+
+  var pairs = [['attendees','attendees_r'],['salary','salary_r'],['duration','duration_r']];
+  pairs.forEach(function(p){
+    var n = $(p[0]), r = $(p[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  });
+
+  ['hours','overhead','freq'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function calc(){
+    var attendees = Math.max(1, num('attendees', 1));
+    var salary = Math.max(0, num('salary', 0));
+    var hours = Math.max(1, num('hours', 40));
+    var overhead = Math.max(1, num('overhead', 1.25));
+    var duration = Math.max(1, num('duration', 60));
+    var freq = Math.max(0, num('freq', 0));
+
+    var weeksPerYear = 48;
+    var hourlyRate = salary / (hours * weeksPerYear);
+    var burdenedRate = hourlyRate * overhead;
+    var costPerMinute = (burdenedRate * attendees) / 60;
+    var meetingCost = costPerMinute * duration;
+    var weeklyCost = meetingCost * freq;
+    var annualCost = weeklyCost * weeksPerYear;
+
+    $('cost').textContent = usd2.format(meetingCost);
+    $('perminute').textContent = usd2.format(costPerMinute);
+    $('hourlyrate').textContent = usd2.format(burdenedRate);
+    $('weekly').textContent = freq > 0 ? usd0.format(weeklyCost) : '—';
+    $('annual').textContent = freq > 0 ? usd0.format(annualCost) : '—';
+
+    var rows = [];
+    if(freq > 0 && annualCost > 0){
+      var items = [
+        ['A junior hire\'s annual salary', 45000],
+        ['A year of premium software licenses', 12000],
+        ['A team offsite / retreat', 8000],
+        ['A conference budget for the team', 5000]
+      ];
+      items.forEach(function(it){
+        var ratio = annualCost / it[1];
+        rows.push('<tr><td>'+it[0]+'</td><td class="gain">'+ratio.toFixed(1)+'× ('+usd0.format(it[1])+')</td></tr>');
+      });
+    }
+    $('tbody').innerHTML = rows.join('') || '<tr><td colspan="2" style="text-align:center;color:var(--muted)">Set a recurring frequency above 0 to see annual comparisons</td></tr>';
+
+    if(freq > 0){
+      $('advice').innerHTML = 'This meeting alone costs your organization roughly <b>' + usd0.format(annualCost) +
+        ' a year</b> in salary time. Before adding another recurring meeting, ask whether the same outcome could come from a shorter meeting, fewer attendees, or an async update instead.';
+    } else {
+      $('advice').innerHTML = 'This one-off meeting costs about <b>' + usd2.format(meetingCost) +
+        '</b> in combined salary time. Set a recurring frequency above to see what repeating it weekly would cost over a year.';
+    }
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
