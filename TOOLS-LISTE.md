@@ -142,6 +142,33 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 ---
 
+## Charts & Visuals (92–109)
+
+*(Neue Content-Schiene: visuelle Cheat-Sheets und Chart-Pattern-Grafiken statt HTML-Rechner. Kein GitHub-Pages-Link nötig, aber Asset liegt trotzdem im Repo unter `visuals/` als Quelle der Wahrheit. Format: statische Infografik (SVG/PNG) oder kurze Loop-Animation. Läuft über den normalen Typefully-Workflow, nur ohne Tool-Link im Thread.)*
+
+92. ✅ **Candlestick Cheat Sheet** — 10 wichtigste Formationen (Hammer, Engulfing, Doji, Morning/Evening Star, Marubozu, etc.) auf einen Blick
+93. ⬜ Chart-Pattern-Cheat-Sheet: Head & Shoulders — Aufbau, Entry, Stop, Target in einer Grafik
+94. ⬜ Chart-Pattern-Cheat-Sheet: Double Top/Bottom
+95. ⬜ Chart-Pattern-Cheat-Sheet: Bull/Bear Flag
+96. ⬜ Fibonacci-Retracement-Cheat-Sheet: Levels + typische Reaktionszonen
+97. ⬜ Support/Resistance-Visualisierung: wie ein Level von Widerstand zu Unterstützung wechselt (Rollentausch)
+98. ⬜ Risk/Reward-Visualisierung: 1:1 vs 1:2 vs 1:3 nebeneinander, Breakeven-Winrate markiert
+99. ⬜ "Anatomy of a Trade"-Infografik: Entry, SL, TP, Trailing-Stop an einem Beispiel-Chart
+100. ⬜ Trendlinien-Cheat-Sheet: gültig vs. ungültig gezeichnet, häufige Fehler
+101. ⬜ Order-Types-Cheat-Sheet: Market/Limit/Stop/Stop-Limit visuell erklärt
+102. ⬜ Session-Overlap-Grafik: London/NY/Tokio-Handelszeiten als Zeitzonen-Balkendiagramm
+103. ⬜ Drawdown-Recovery-Grafik: wie viel % Gewinn nötig ist nach X% Verlust (Kurve)
+104. ⬜ Position-Sizing-Visual: gleiche % Risiko bei unterschiedlicher Stop-Distanz
+105. ⬜ Loop-Animation: Head & Shoulders — Formation baut sich Kerze für Kerze auf, Breakout-Moment
+106. ⬜ Loop-Animation: Double Top — gleiche Bauweise als Loop
+107. ⬜ Loop-Animation: Bull-Flag-Breakout
+108. ⬜ Loop-Animation: Candlestick-Formation "entsteht" (z. B. Engulfing wächst aus vorheriger Kerze)
+109. ⬜ Loop-Animation: Fibonacci-Retracement zieht sich über einen simulierten Pullback
+
+*(Assets liegen unter `github.com/CerberusFX/tools/visuals/` — bevorzugt als SVG bauen und pushen, nicht als PNG: SVG ist Text und lässt sich zuverlässig vollständig übertragen, PNG-Binärdaten sind beim Copy-Paste durch den Chat-Kontext truncation-gefährdet. Aus dem SVG werden die beiden Typefully-Thumbnails per `cairosvg`-Render erzeugt.)*
+
+---
+
 ## Content-Ideen ohne eigenes HTML-Tool (separat, andere Kategorie)
 
 Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den Standard-Tool-Workflow (kein GitHub-Pages-Link nötig). Eigene Rotation, nicht Teil der 50er-Zählung oben.
@@ -174,6 +201,7 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 | Break-Even Calculator | 10078558 | 31.07. 17:07 |
 | Staking Yield Calculator | 10083330 | 01.08. 12:02 |
 | Meeting Cost Calculator | 10083333 | 02.08. 16:56 |
+| Candlestick Cheat Sheet | 10122090 | 03.08. 10:04 |
 
 ## Workflow (fix)
 
@@ -182,4 +210,4 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 91 Tool-Einträge über 8 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 109 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
