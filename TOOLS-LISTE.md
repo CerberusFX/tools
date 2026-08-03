@@ -144,7 +144,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 ---
 
-## Charts & Visuals (92–114)
+## Charts & Visuals (92–116)
 
 *(Neue Content-Schiene: visuelle Cheat-Sheets und Chart-Pattern-Grafiken statt HTML-Rechner. Kein GitHub-Pages-Link nötig, aber Asset liegt trotzdem im Repo unter `visuals/` als Quelle der Wahrheit. Format: statische Infografik (SVG/PNG) oder kurze Loop-Animation. Läuft über den normalen Typefully-Workflow, nur ohne Tool-Link im Thread. Alle Texte in den Grafiken und Threads: Englisch.)*
 
@@ -154,7 +154,9 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 3. Reihe mit genau 5 kleinen Step-Panels (nummeriert, farbige Titel, Mini-Skizze, 2–3 Zeilen Text)
 4. Dreier-Reihe: "Confirmation Factors" (grüne Haken) · "Best Timeframes" (Uhr-Icon) · "Pro Tips" (orange Haken/Icon)
 5. Footer-Banner: dunkle Vollbreiten-Leiste mit kurzem Imperativ-Claim + `t.me/CerberusFXTrading` zentriert darunter
-Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank bittet explizit um ein Upgrade. Alle neuen Cheat-Sheets ab sofort nach v2 bauen.
+Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank bittet explizit um ein Upgrade.
+
+**Thumbnail-Hinweis für v2-Sheets:** das volle 1080×1500-Sheet lässt sich nicht 1:1 auf 1280×720 herunterskalieren (Text wird unlesbar). Stattdessen für Cover (1280×720) und Quadrat (600×600) jeweils eine eigene, kompakte Komposition bauen: Headline + Mini-Chart-Illustration + kurze "Key Rules"-Teaser-Liste + CTA "Full cheat sheet inside" + Kanal-Link. Diese Cover-Grafiken werden nicht ins Repo gepusht (nur Gebrauchsmaterial für Typefully), das vollständige Sheet bleibt die Repo-Quelle der Wahrheit.
 
 92. ✅ **Candlestick Cheat Sheet** — 10 wichtigste Formationen (Hammer, Engulfing, Doji, Morning/Evening Star, Marubozu, etc.) auf einen Blick
 93. ✅ **Head & Shoulders Cheat Sheet** — Struktur, Neckline, Entry, Stop, Target (Englisch)
@@ -174,11 +176,15 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 107. ⬜ Loop-Animation: Bull-Flag-Breakout
 108. ⬜ Loop-Animation: Candlestick-Formation "entsteht" (z. B. Engulfing wächst aus vorheriger Kerze)
 109. ⬜ Loop-Animation: Fibonacci-Retracement zieht sich über einen simulierten Pullback
-110. ⬜ **[v2-Template] SMC Double Bottom & Order Block Cheat Sheet** — Double Bottom, MSS, BOS, Order Block, Sell-Entry-Setup als vollständiges v2-Sheet (Key Rules, 5-Step-Panels, Confirmation Factors, Best Timeframes, Pro Tips) — analog zum von Frank geteilten Referenzbeispiel, aber eigenständig gebaut
-111. ⬜ **[v2-Template]** Liquidity Sweep & Reversal Cheat Sheet — Stop-Hunt, Sweep, Reversal-Entry im gleichen v2-Format
-112. ⬜ **[v2-Template]** Fair Value Gap (FVG) Cheat Sheet — Gap-Erkennung, Fill-Erwartung, Entry am FVG im v2-Format
+110. ✅ **[v2-Template] SMC Double Bottom & Order Block Cheat Sheet** — Double Bottom, MSS, BOS, Order Block, Sell-Entry-Setup als vollständiges v2-Sheet (Key Rules, 5-Step-Panels, Confirmation Factors, Best Timeframes, Pro Tips)
+111. ✅ **[v2-Template] Liquidity Sweep & Reversal Cheat Sheet** — Stop-Hunt, Sweep, CHoCH, Reversal-Entry im v2-Format
+112. ✅ **[v2-Template] Fair Value Gap (FVG) Cheat Sheet** — 3-Kerzen-Impulse, Gap-Fill, Entry am FVG im v2-Format
+117. ⬜ **[v2-Template]** Breaker Block Cheat Sheet — gescheiterter Order Block, der die Seite wechselt (Failed OB → Breaker), Entry/Invalidation
+118. ⬜ **[v2-Template]** Premium/Discount Zones Cheat Sheet — 50%-Equilibrium einer Range, wann man in Premium verkauft vs. in Discount kauft
+119. ⬜ **[v2-Template]** Inducement & Mitigation Cheat Sheet — wie Liquidity-Grabs vor dem eigentlichen Move Trader in falsche Richtung locken
+120. ⬜ **[v2-Template]** Multi-Timeframe Confluence Cheat Sheet — wie man HTF-Bias (Daily/4H) mit LTF-Entry (15m/5m) sauber kombiniert
 
-*(Assets liegen unter `github.com/CerberusFX/tools/visuals/` — bevorzugt als SVG bauen und pushen, nicht als PNG: SVG ist Text und lässt sich zuverlässig vollständig übertragen, PNG-Binärdaten sind beim Copy-Paste durch den Chat-Kontext truncation-gefährdet. Aus dem SVG werden die beiden Typefully-Thumbnails per `cairosvg`-Render erzeugt.)*
+*(Assets liegen unter `github.com/CerberusFX/tools/visuals/` — bevorzugt als SVG bauen und pushen, nicht als PNG: SVG ist Text und lässt sich zuverlässig vollständig übertragen, PNG-Binärdaten sind beim Copy-Paste durch den Chat-Kontext truncation-gefährdet. Aus dem SVG werden die beiden Typefully-Thumbnails per `cairosvg`-Render erzeugt — bei v2-Sheets als eigene Kompakt-Komposition, siehe Hinweis oben.)*
 
 ---
 
@@ -223,6 +229,9 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 | Bull/Bear Flag Cheat Sheet | 10127359 | 06.08. 10:04 |
 | Fibonacci Retracement Cheat Sheet | 10127362 | 07.08. 10:03 |
 | Order Types Cheat Sheet | 10127364 | 08.08. 15:03 |
+| SMC Double Bottom & Order Block Cheat Sheet | 10178404 | 09.08. 10:07 |
+| Liquidity Sweep & Reversal Cheat Sheet | 10178408 | 10.08. 12:04 |
+| Fair Value Gap (FVG) Cheat Sheet | 10178413 | 11.08. 15:58 |
 | Support/Resistance Role Reversal | 10129584 | 30.07. 21:41 (Sonder-Post) |
 
 ## Workflow (fix)
@@ -232,6 +241,6 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 116 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 120 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
-8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets
+8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets. Für Thumbnails bei v2-Sheets eigene Kompakt-Cover bauen statt das volle Sheet zu skalieren (siehe Hinweis im Charts & Visuals-Abschnitt).
