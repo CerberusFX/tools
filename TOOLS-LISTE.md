@@ -144,9 +144,17 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 ---
 
-## Charts & Visuals (92–109)
+## Charts & Visuals (92–114)
 
 *(Neue Content-Schiene: visuelle Cheat-Sheets und Chart-Pattern-Grafiken statt HTML-Rechner. Kein GitHub-Pages-Link nötig, aber Asset liegt trotzdem im Repo unter `visuals/` als Quelle der Wahrheit. Format: statische Infografik (SVG/PNG) oder kurze Loop-Animation. Läuft über den normalen Typefully-Workflow, nur ohne Tool-Link im Thread. Alle Texte in den Grafiken und Threads: Englisch.)*
+
+**Layout-Template v2 (verbindlich ab jetzt für alle neuen Cheat-Sheets):** `visuals/_template/cheatsheet-template-v2.svg` — dichteres, "premium" Infografik-Layout (Referenz: von Frank geteiltes Beispielbild "Mastering Price Action: Double Bottom & Order Block", Format SMC/ICT-Style). Pflichtelemente pro Sheet:
+1. Header: neutrale Titelzeile + zweite Zeile mit farblich getrennten Kernbegriffen (grün/rot je nach Bullish/Bearish-Kontext) + dunkle Tagline-Pille darunter
+2. Hauptbereich: annotiertes Chart/Diagramm links/mittig + rechte "KEY RULES"-Sidebar (dunkle Card, nummerierte grüne Chips, 5–7 Regeln)
+3. Reihe mit genau 5 kleinen Step-Panels (nummeriert, farbige Titel, Mini-Skizze, 2–3 Zeilen Text)
+4. Dreier-Reihe: "Confirmation Factors" (grüne Haken) · "Best Timeframes" (Uhr-Icon) · "Pro Tips" (orange Haken/Icon)
+5. Footer-Banner: dunkle Vollbreiten-Leiste mit kurzem Imperativ-Claim + `t.me/CerberusFXTrading` zentriert darunter
+Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank bittet explizit um ein Upgrade. Alle neuen Cheat-Sheets ab sofort nach v2 bauen.
 
 92. ✅ **Candlestick Cheat Sheet** — 10 wichtigste Formationen (Hammer, Engulfing, Doji, Morning/Evening Star, Marubozu, etc.) auf einen Blick
 93. ✅ **Head & Shoulders Cheat Sheet** — Struktur, Neckline, Entry, Stop, Target (Englisch)
@@ -166,17 +174,20 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 107. ⬜ Loop-Animation: Bull-Flag-Breakout
 108. ⬜ Loop-Animation: Candlestick-Formation "entsteht" (z. B. Engulfing wächst aus vorheriger Kerze)
 109. ⬜ Loop-Animation: Fibonacci-Retracement zieht sich über einen simulierten Pullback
+110. ⬜ **[v2-Template] SMC Double Bottom & Order Block Cheat Sheet** — Double Bottom, MSS, BOS, Order Block, Sell-Entry-Setup als vollständiges v2-Sheet (Key Rules, 5-Step-Panels, Confirmation Factors, Best Timeframes, Pro Tips) — analog zum von Frank geteilten Referenzbeispiel, aber eigenständig gebaut
+111. ⬜ **[v2-Template]** Liquidity Sweep & Reversal Cheat Sheet — Stop-Hunt, Sweep, Reversal-Entry im gleichen v2-Format
+112. ⬜ **[v2-Template]** Fair Value Gap (FVG) Cheat Sheet — Gap-Erkennung, Fill-Erwartung, Entry am FVG im v2-Format
 
 *(Assets liegen unter `github.com/CerberusFX/tools/visuals/` — bevorzugt als SVG bauen und pushen, nicht als PNG: SVG ist Text und lässt sich zuverlässig vollständig übertragen, PNG-Binärdaten sind beim Copy-Paste durch den Chat-Kontext truncation-gefährdet. Aus dem SVG werden die beiden Typefully-Thumbnails per `cairosvg`-Render erzeugt.)*
 
 ---
 
-## Weitere Ideen (110–113)
+## Weitere Ideen (113–116)
 
-110. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
-111. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
-112. ⬜ Session Overlap Graphic — London/NY/Tokyo trading hours as a timezone bar chart
-113. ⬜ Drawdown Recovery Curve — visual showing % gain needed to recover from X% loss
+113. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
+114. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
+115. ⬜ Session Overlap Graphic — London/NY/Tokyo trading hours as a timezone bar chart
+116. ⬜ Drawdown Recovery Curve — visual showing % gain needed to recover from X% loss
 
 ---
 
@@ -221,5 +232,6 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 113 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 116 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
+8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets
