@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk/Reward Calculator — CerberusFX</title>
+<style>
+  :root{
+    --bg:#1E1B2E; --bg2:#332C4D; --card:#F5F2FC; --card-hi:#FCFBFE;
+    --ink:#1E1B2E; --muted:#6E6A83; --muted2:#8A82AD;
+    --accent:#5B3FD6; --accent-dk:#3A2599; --lav:#C9C2E8; --line:#E4DEF4;
+    --green:#2E9E6B; --amber:#FFB020; --red:#D64545; --red-soft:#FF9E9E;
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    background:linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+    color:var(--ink); padding:32px 16px 60px;
+  }
+  .wrap{max-width:960px; margin:0 auto;}
+  .brand{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .mark{display:flex; gap:4px; align-items:flex-end;}
+  .mark span{display:block; width:8px; background:var(--accent); border-radius:3px;}
+  .mark span:nth-child(1){height:14px;}
+  .mark span:nth-child(2){height:22px;}
+  .mark span:nth-child(3){height:17px;}
+  .brand b{color:var(--lav); letter-spacing:2.5px; font-size:14px;}
+  .brand small{color:var(--muted2); letter-spacing:2px; font-size:12px;}
+  h1{color:#fff; font-size:clamp(28px,4vw,42px); margin:18px 0 6px; line-height:1.1;}
+  .sub{color:#c7c1e0; font-size:16px; margin-bottom:28px; max-width:640px;}
+
+  .grid{display:grid; grid-template-columns: 1fr 1fr; gap:20px;}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
+
+  .card{background:var(--card); border-radius:20px; padding:26px; box-shadow:0 20px 40px rgba(0,0,0,.25);}
+  .card h2{font-size:13px; letter-spacing:1.6px; color:var(--muted); margin:0 0 18px; text-transform:uppercase;}
+
+  .field{margin-bottom:18px;}
+  .field label{display:flex; justify-content:space-between; font-size:14px; font-weight:700; margin-bottom:8px;}
+  .field label span.val{color:var(--accent-dk); font-weight:800;}
+  input[type=range]{width:100%; accent-color:var(--accent); height:6px;}
+  input[type=number]{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+    font-size:15px; font-weight:700; color:var(--ink); background:var(--card-hi);
+  }
+  .hint{font-size:12.5px; color:var(--muted2); margin-top:4px;}
+
+  .result{background:var(--card); border-radius:20px; padding:28px; margin-top:20px; box-shadow:0 20px 40px rgba(0,0,0,.25);}
+  .result-top{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:20px;}
+  .headline .label{font-size:13px; letter-spacing:1.6px; color:var(--muted); text-transform:uppercase; margin-bottom:6px;}
+  .headline .big{font-size:56px; font-weight:800; color:var(--accent-dk); line-height:1;}
+  .headline .unit{font-size:20px; color:var(--muted2); font-weight:700; margin-left:8px;}
+  .badge{padding:8px 16px; border-radius:999px; font-weight:800; font-size:13px; letter-spacing:.5px;}
+  .badge.green{background:rgba(46,158,107,.15); color:var(--green);}
+  .badge.amber{background:rgba(255,176,32,.18); color:#a86a00;}
+  .badge.red{background:rgba(214,69,69,.15); color:var(--red);}
+
+  .bars{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+  .bar-row{display:grid; grid-template-columns:170px 1fr 90px; align-items:center; gap:10px; font-size:13px;}
+  .bar-row .lbl{color:var(--muted); font-weight:700;}
+  .bar-track{height:14px; background:var(--line); border-radius:7px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:7px;}
+  .bar-row .amt{text-align:right; font-weight:800; color:var(--ink);}
+
+  .tip{
+    margin-top:20px; padding:16px 18px; border-radius:14px; background:rgba(91,63,214,.06);
+    border:1px solid var(--line); font-size:14px; color:#4a4560; line-height:1.55;
+  }
+  .tip b{color:var(--accent-dk);}
+
+  footer{margin-top:34px; text-align:center;}
+  footer a{color:var(--lav); text-decoration:none; font-weight:700; font-size:15px;}
+  footer .sub2{color:var(--muted2); font-size:12.5px; margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="mark"><span></span><span></span><span></span></div>
+    <b>CERBERUSFX</b><small>&nbsp;· FREE TOOL</small>
+  </div>
+  <h1>Risk/Reward Calculator</h1>
+  <div class="sub">Enter your entry, stop loss, and take profit — instantly see your R:R ratio and the exact win rate you need just to break even.</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Trade Levels</h2>
+      <div class="field">
+        <label>Entry Price</label>
+        <input type="number" id="entry" value="1.1000" step="0.0001">
+      </div>
+      <div class="field">
+        <label>Stop Loss</label>
+        <input type="number" id="stop" value="1.0950" step="0.0001">
+        <div class="hint">Where you'll exit if the trade goes against you.</div>
+      </div>
+      <div class="field">
+        <label>Take Profit</label>
+        <input type="number" id="target" value="1.1120" step="0.0001">
+        <div class="hint">Where you plan to exit if the trade works.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Direction &amp; Win Rate</h2>
+      <div class="field">
+        <label>Trade Direction</label>
+        <select id="direction" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:15px; font-weight:700; color:var(--ink); background:var(--card-hi);">
+          <option value="long">Long (Buy)</option>
+          <option value="short">Short (Sell)</option>
+        </select>
+        <div class="hint">Used only to sanity-check that stop/target sit on the correct side of entry.</div>
+      </div>
+      <div class="field">
+        <label>Your estimated win rate <span class="val" id="v-wr">45</span>%</label>
+        <input type="range" id="wr" min="10" max="90" step="1" value="45">
+        <div class="hint">Your honest, historical win rate for this kind of setup — not a guess of what you'd like it to be.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result">
+    <div class="result-top">
+      <div class="headline">
+        <div class="label">Risk / Reward Ratio</div>
+        <div><span class="big" id="out-rr">—</span><span class="unit">: 1</span></div>
+      </div>
+      <div class="badge" id="out-badge">—</div>
+    </div>
+
+    <div class="bars">
+      <div class="bar-row">
+        <div class="lbl">Risk (to stop)</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-risk" style="background:var(--red);"></div></div>
+        <div class="amt" id="amt-risk">—</div>
+      </div>
+      <div class="bar-row">
+        <div class="lbl">Reward (to target)</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-reward" style="background:var(--green);"></div></div>
+        <div class="amt" id="amt-reward">—</div>
+      </div>
+      <div class="bar-row">
+        <div class="lbl">Breakeven win rate</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-be" style="background:var(--accent);"></div></div>
+        <div class="amt" id="amt-be">—</div>
+      </div>
+    </div>
+
+    <div class="tip" id="tip-text"></div>
+  </div>
+
+  <footer>
+    <a href="https://t.me/CerberusFXTrading" target="_blank" rel="noopener">t.me/CerberusFXTrading</a>
+    <div class="sub2">Free tools for traders &amp; builders — no sign-up, runs entirely in your browser.</div>
+  </footer>
+</div>
+
+<script>
+const ids = ['entry','stop','target','direction','wr'];
+const els = {};
+ids.forEach(id => els[id] = document.getElementById(id));
+
+function fmt(n, d=2){ return (Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toString(); }
+
+function update(){
+  const entry = parseFloat(els.entry.value);
+  const stop = parseFloat(els.stop.value);
+  const target = parseFloat(els.target.value);
+  const dir = els.direction.value;
+  const wr = parseFloat(els.wr.value) / 100;
+
+  document.getElementById('v-wr').textContent = fmt(els.wr.value, 0);
+
+  if (isNaN(entry) || isNaN(stop) || isNaN(target)){
+    return;
+  }
+
+  const risk = Math.abs(entry - stop);
+  const reward = Math.abs(target - entry);
+  const rr = risk > 0 ? (reward / risk) : 0;
+
+  // sanity check on direction
+  let warn = '';
+  if (dir === 'long' && (stop >= entry || target <= entry)){
+    warn = 'Heads up: for a long trade, Stop Loss should be below entry and Take Profit above it. Double-check your levels.';
+  } else if (dir === 'short' && (stop <= entry || target >= entry)){
+    warn = 'Heads up: for a short trade, Stop Loss should be above entry and Take Profit below it. Double-check your levels.';
+  }
+
+  document.getElementById('out-rr').textContent = risk > 0 ? fmt(rr, 2) : '—';
+
+  const badge = document.getElementById('out-badge');
+  if (rr >= 2){
+    badge.textContent = 'STRONG R:R';
+    badge.className = 'badge green';
+  } else if (rr >= 1){
+    badge.textContent = 'ACCEPTABLE';
+    badge.className = 'badge amber';
+  } else {
+    badge.textContent = 'WEAK R:R';
+    badge.className = 'badge red';
+  }
+
+  const maxDist = Math.max(risk, reward, 1e-9);
+  function setBar(barId, amtId, value, maxV, decimals){
+    const w = Math.min(100, Math.max(0,(value/maxV)*100));
+    document.getElementById(barId).style.width = w + '%';
+    document.getElementById(amtId).textContent = fmt(value, decimals);
+  }
+  setBar('bar-risk','amt-risk', risk, maxDist, 4);
+  setBar('bar-reward','amt-reward', reward, maxDist, 4);
+
+  const breakevenWR = rr > 0 ? (1 / (1 + rr)) * 100 : 100;
+  setBar('bar-be','amt-be', breakevenWR, 100, 1);
+  document.getElementById('amt-be').textContent = fmt(breakevenWR, 1) + '%';
+
+  const tip = document.getElementById('tip-text');
+  let msg = '';
+  if (warn){
+    msg = `<b>${warn}</b><br><br>`;
+  }
+  const edge = wr - (breakevenWR / 100);
+  if (rr <= 0){
+    msg += `Enter valid Stop Loss and Take Profit levels to see your ratio.`;
+  } else if (edge > 0.05){
+    msg += `<b>This setup has real edge.</b> At a ${fmt(els.wr.value,0)}% win rate against a ${fmt(breakevenWR,1)}% breakeven requirement, you're trading with roughly ${fmt(edge*100,1)} percentage points of margin. That's the buffer that survives a losing streak without wiping out your edge.`;
+  } else if (edge > -0.05){
+    msg += `<b>This is close to breakeven.</b> Your estimated win rate (${fmt(els.wr.value,0)}%) is near the ${fmt(breakevenWR,1)}% you need just to not lose money on this R:R. Small edges are real, but they require flawless execution and enough sample size — no room for revenge trades or moved stops.`;
+  } else {
+    msg += `<b>The math doesn't favor this setup.</b> You'd need a ${fmt(breakevenWR,1)}% win rate just to break even, but you estimated ${fmt(els.wr.value,0)}%. Either the R:R needs to improve (wider target, tighter stop) or this isn't a setup worth taking as-is.`;
+  }
+  msg += ` <br><br>Breakeven win rate is calculated as 1 ÷ (1 + R:R) — the exact win rate at which average wins and losses cancel out, before spread, commission, or slippage.`;
+  tip.innerHTML = msg;
+}
+
+ids.forEach(id => els[id].addEventListener('input', update));
+els.direction.addEventListener('change', update);
+update();
+</script>
+</body>
+</html>

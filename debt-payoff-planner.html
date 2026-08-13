@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debt Payoff Planner — CerberusFX</title>
+<style>
+  :root{
+    --bg:#1E1B2E; --bg2:#332C4D; --card:#F5F2FC; --card-hi:#FCFBFE;
+    --ink:#1E1B2E; --muted:#6E6A83; --muted2:#8A82AD;
+    --accent:#5B3FD6; --accent-dk:#3A2599; --lav:#C9C2E8; --line:#E4DEF4;
+    --green:#2E9E6B; --amber:#FFB020; --red:#D64545; --red-soft:#FF9E9E;
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    background:linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+    color:var(--ink); padding:32px 16px 60px;
+  }
+  .wrap{max-width:960px; margin:0 auto;}
+  .brand{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+  .mark{display:flex; gap:4px; align-items:flex-end;}
+  .mark span{display:block; width:8px; background:var(--accent); border-radius:3px;}
+  .mark span:nth-child(1){height:14px;}
+  .mark span:nth-child(2){height:22px;}
+  .mark span:nth-child(3){height:17px;}
+  .brand b{color:var(--lav); letter-spacing:2.5px; font-size:14px;}
+  .brand small{color:var(--muted2); letter-spacing:2px; font-size:12px;}
+  h1{color:#fff; font-size:clamp(28px,4vw,42px); margin:18px 0 6px; line-height:1.1;}
+  .sub{color:#c7c1e0; font-size:16px; margin-bottom:28px; max-width:640px;}
+
+  .card{background:var(--card); border-radius:20px; padding:26px; box-shadow:0 20px 40px rgba(0,0,0,.25); margin-bottom:20px;}
+  .card h2{font-size:13px; letter-spacing:1.6px; color:var(--muted); margin:0 0 18px; text-transform:uppercase;}
+
+  .debts{display:flex; flex-direction:column; gap:12px; margin-bottom:14px;}
+  .debt-row{
+    display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr auto; gap:10px; align-items:center;
+    background:var(--card-hi); border:1px solid var(--line); border-radius:12px; padding:10px 12px;
+  }
+  @media (max-width:760px){ .debt-row{grid-template-columns:1fr 1fr; grid-template-rows:auto auto auto; } }
+  .debt-row input{
+    width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--line);
+    font-size:14px; font-weight:700; color:var(--ink); background:#fff;
+  }
+  .debt-row label{font-size:11px; color:var(--muted); font-weight:700; display:block; margin-bottom:3px;}
+  .remove-btn{
+    background:rgba(214,69,69,.12); color:var(--red); border:none; border-radius:8px;
+    padding:8px 12px; font-weight:800; cursor:pointer; font-size:13px;
+  }
+  .add-btn{
+    background:var(--accent); color:#fff; border:none; border-radius:10px;
+    padding:10px 16px; font-weight:800; cursor:pointer; font-size:14px; margin-top:4px;
+  }
+
+  .field{margin-bottom:0;}
+  .field label{display:flex; justify-content:space-between; font-size:14px; font-weight:700; margin-bottom:8px;}
+  .field label span.val{color:var(--accent-dk); font-weight:800;}
+  input[type=range]{width:100%; accent-color:var(--accent); height:6px;}
+  .hint{font-size:12.5px; color:var(--muted2); margin-top:4px;}
+
+  .toggle-row{display:flex; gap:10px; margin-bottom:4px;}
+  .toggle{
+    flex:1; text-align:center; padding:12px; border-radius:12px; border:2px solid var(--line);
+    font-weight:800; font-size:14px; cursor:pointer; background:#fff; color:var(--muted);
+  }
+  .toggle.active{border-color:var(--accent); color:var(--accent-dk); background:rgba(91,63,214,.08);}
+
+  .result{background:var(--card); border-radius:20px; padding:28px; margin-top:20px; box-shadow:0 20px 40px rgba(0,0,0,.25);}
+  .result-top{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:20px;}
+  .headline .label{font-size:13px; letter-spacing:1.6px; color:var(--muted); text-transform:uppercase; margin-bottom:6px;}
+  .headline .big{font-size:48px; font-weight:800; color:var(--accent-dk); line-height:1;}
+  .headline .unit{font-size:18px; color:var(--muted2); font-weight:700; margin-left:6px;}
+
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:6px;}
+  @media (max-width:760px){ .compare{grid-template-columns:1fr;} }
+  .compare .box{background:var(--card-hi); border:1px solid var(--line); border-radius:14px; padding:16px;}
+  .compare .box h3{font-size:13px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; margin:0 0 8px;}
+  .compare .box .n{font-size:24px; font-weight:800; color:var(--accent-dk);}
+  .compare .box .s{font-size:12.5px; color:var(--muted2); margin-top:4px;}
+
+  .order-list{list-style:none; padding:0; margin:16px 0 0; display:flex; flex-direction:column; gap:8px;}
+  .order-list li{
+    background:var(--card-hi); border:1px solid var(--line); border-radius:10px; padding:10px 14px;
+    display:flex; justify-content:space-between; font-size:14px; font-weight:700;
+  }
+  .order-list li .idx{color:var(--accent-dk); margin-right:8px;}
+  .order-list li .apr{color:var(--muted2); font-weight:600; font-size:12.5px;}
+
+  .tip{
+    margin-top:20px; padding:16px 18px; border-radius:14px; background:rgba(91,63,214,.06);
+    border:1px solid var(--line); font-size:14px; color:#4a4560; line-height:1.55;
+  }
+  .tip b{color:var(--accent-dk);}
+
+  footer{margin-top:34px; text-align:center;}
+  footer a{color:var(--lav); text-decoration:none; font-weight:700; font-size:15px;}
+  footer .sub2{color:var(--muted2); font-size:12.5px; margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="mark"><span></span><span></span><span></span></div>
+    <b>CERBERUSFX</b><small>&nbsp;· FREE TOOL</small>
+  </div>
+  <h1>Debt Payoff Planner</h1>
+  <div class="sub">Compare the Avalanche method (highest interest first) against the Snowball method (smallest balance first) — see exactly how many months and how much interest each one costs you.</div>
+
+  <div class="card">
+    <h2>Your Debts</h2>
+    <div class="debts" id="debts-container"></div>
+    <button class="add-btn" id="add-debt">+ Add another debt</button>
+  </div>
+
+  <div class="card">
+    <h2>Extra Monthly Payment</h2>
+    <div class="field">
+      <label>Extra amount above minimums <span class="val" id="v-extra">200</span></label>
+      <input type="range" id="extra" min="0" max="2000" step="10" value="200">
+      <div class="hint">How much extra you can put toward debt each month, on top of all minimum payments combined.</div>
+    </div>
+  </div>
+
+  <div class="result">
+    <div class="toggle-row">
+      <div class="toggle active" id="toggle-avalanche">AVALANCHE (highest APR first)</div>
+      <div class="toggle" id="toggle-snowball">SNOWBALL (smallest balance first)</div>
+    </div>
+
+    <div class="result-top" style="margin-top:18px;">
+      <div class="headline">
+        <div class="label">Debt-Free In</div>
+        <div><span class="big" id="out-months">—</span><span class="unit">months</span></div>
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="box">
+        <h3>Total Interest Paid</h3>
+        <div class="n" id="out-interest">—</div>
+        <div class="s">Over the full payoff period</div>
+      </div>
+      <div class="box">
+        <h3>vs. the other method</h3>
+        <div class="n" id="out-diff">—</div>
+        <div class="s" id="out-diff-sub">Interest saved or cost by switching</div>
+      </div>
+    </div>
+
+    <ul class="order-list" id="payoff-order"></ul>
+
+    <div class="tip" id="tip-text"></div>
+  </div>
+
+  <footer>
+    <a href="https://t.me/CerberusFXTrading" target="_blank" rel="noopener">t.me/CerberusFXTrading</a>
+    <div class="sub2">Free tools for traders &amp; builders — no sign-up, runs entirely in your browser.</div>
+  </footer>
+</div>
+
+<script>
+let debts = [
+  {name:'Credit Card', balance:4500, apr:22.9, min:110},
+  {name:'Car Loan', balance:9200, apr:6.5, min:230},
+  {name:'Personal Loan', balance:2600, apr:13.5, min:90},
+];
+let method = 'avalanche';
+
+const container = document.getElementById('debts-container');
+const extraEl = document.getElementById('extra');
+
+function renderDebts(){
+  container.innerHTML = '';
+  debts.forEach((d, i) => {
+    const row = document.createElement('div');
+    row.className = 'debt-row';
+    row.innerHTML = `
+      <div><label>Name</label><input type="text" data-i="${i}" data-f="name" value="${d.name}"></div>
+      <div><label>Balance</label><input type="number" data-i="${i}" data-f="balance" value="${d.balance}" step="50"></div>
+      <div><label>APR %</label><input type="number" data-i="${i}" data-f="apr" value="${d.apr}" step="0.1"></div>
+      <div><label>Min. Payment</label><input type="number" data-i="${i}" data-f="min" value="${d.min}" step="5"></div>
+      <button class="remove-btn" data-remove="${i}">Remove</button>
+    `;
+    container.appendChild(row);
+  });
+  container.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', e => {
+      const i = parseInt(e.target.dataset.i);
+      const f = e.target.dataset.f;
+      debts[i][f] = (f === 'name') ? e.target.value : parseFloat(e.target.value) || 0;
+      update();
+    });
+  });
+  container.querySelectorAll('[data-remove]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const i = parseInt(e.target.dataset.remove);
+      debts.splice(i,1);
+      renderDebts();
+      update();
+    });
+  });
+}
+
+document.getElementById('add-debt').addEventListener('click', () => {
+  debts.push({name:'New Debt', balance:1000, apr:15, min:30});
+  renderDebts();
+  update();
+});
+
+document.getElementById('toggle-avalanche').addEventListener('click', () => {
+  method = 'avalanche';
+  document.getElementById('toggle-avalanche').classList.add('active');
+  document.getElementById('toggle-snowball').classList.remove('active');
+  update();
+});
+document.getElementById('toggle-snowball').addEventListener('click', () => {
+  method = 'snowball';
+  document.getElementById('toggle-snowball').classList.add('active');
+  document.getElementById('toggle-avalanche').classList.remove('active');
+  update();
+});
+
+extraEl.addEventListener('input', update);
+
+function fmtMoney(n){
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function simulate(order, extra){
+  // order: array of debt indices, in payoff priority
+  let bals = debts.map(d => d.balance);
+  const aprs = debts.map(d => d.apr / 100 / 12);
+  const mins = debts.map(d => d.min);
+  let months = 0;
+  let totalInterest = 0;
+  const maxMonths = 600;
+
+  while (bals.some(b => b > 0.01) && months < maxMonths){
+    months++;
+    let freed = extra;
+    // apply interest + minimums
+    for (let i=0;i<bals.length;i++){
+      if (bals[i] <= 0) continue;
+      const interest = bals[i] * aprs[i];
+      totalInterest += interest;
+      bals[i] += interest;
+      const pay = Math.min(mins[i], bals[i]);
+      bals[i] -= pay;
+    }
+    // apply extra to priority order
+    for (const idx of order){
+      if (freed <= 0) break;
+      if (bals[idx] <= 0) continue;
+      const pay = Math.min(freed, bals[idx]);
+      bals[idx] -= pay;
+      freed -= pay;
+    }
+  }
+  return { months, totalInterest };
+}
+
+function getOrder(m){
+  const idxs = debts.map((_,i)=>i);
+  if (m === 'avalanche'){
+    return idxs.sort((a,b) => debts[b].apr - debts[a].apr);
+  } else {
+    return idxs.sort((a,b) => debts[a].balance - debts[b].balance);
+  }
+}
+
+function update(){
+  document.getElementById('v-extra').textContent = extraEl.value;
+  if (debts.length === 0) return;
+
+  const extra = parseFloat(extraEl.value) || 0;
+
+  const avOrder = getOrder('avalanche');
+  const snOrder = getOrder('snowball');
+  const avResult = simulate(avOrder, extra);
+  const snResult = simulate(snOrder, extra);
+
+  const active = method === 'avalanche' ? avResult : snResult;
+  const other = method === 'avalanche' ? snResult : avResult;
+  const activeOrder = method === 'avalanche' ? avOrder : snOrder;
+
+  document.getElementById('out-months').textContent = active.months >= 600 ? '600+' : active.months;
+  document.getElementById('out-interest').textContent = fmtMoney(active.totalInterest);
+
+  const diff = other.totalInterest - active.totalInterest;
+  const diffEl = document.getElementById('out-diff');
+  const diffSub = document.getElementById('out-diff-sub');
+  if (Math.abs(diff) < 1){
+    diffEl.textContent = 'About equal';
+    diffSub.textContent = 'Both methods cost roughly the same in interest here';
+  } else if (diff > 0){
+    diffEl.textContent = fmtMoney(diff) + ' saved';
+    diffSub.textContent = `${method === 'avalanche' ? 'Avalanche' : 'Snowball'} costs less interest than the alternative`;
+  } else {
+    diffEl.textContent = fmtMoney(Math.abs(diff)) + ' more';
+    diffSub.textContent = `${method === 'avalanche' ? 'Avalanche' : 'Snowball'} costs more interest than the alternative`;
+  }
+
+  const orderList = document.getElementById('payoff-order');
+  orderList.innerHTML = '';
+  activeOrder.forEach((idx, i) => {
+    const d = debts[idx];
+    const li = document.createElement('li');
+    li.innerHTML = `<span><span class="idx">${i+1}.</span>${d.name}</span><span class="apr">${fmtMoney(d.balance)} at ${d.apr}% APR</span>`;
+    orderList.appendChild(li);
+  });
+
+  const tip = document.getElementById('tip-text');
+  let msg = '';
+  if (method === 'avalanche'){
+    msg = `<b>Avalanche targets the highest interest rate first</b> — mathematically this minimizes total interest paid, which is exactly what the numbers above show. The tradeoff: if your highest-APR debt also has the biggest balance, your first "win" might take a while, which is harder to stick with psychologically.`;
+  } else {
+    msg = `<b>Snowball targets the smallest balance first</b> — you clear individual debts faster, which builds momentum and keeps you motivated. It usually costs a bit more in total interest than Avalanche, shown above as the difference versus the alternative method.`;
+  }
+  msg += ` <br><br>This model assumes minimum payments stay fixed until each debt is cleared, and that freed-up minimums from paid-off debts automatically roll into your extra payment pool. Real-world numbers vary with rate changes, fees, and payment timing.`;
+  tip.innerHTML = msg;
+}
+
+renderDebts();
+update();
+</script>
+</body>
+</html>
