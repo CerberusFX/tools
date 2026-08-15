@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scalping vs Swing Cost Comparator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .subhead{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--accent-d);
+    text-transform:uppercase;margin:18px 0 10px}
+  .subhead:first-child{margin-top:0}
+
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11px;color:var(--muted);margin-top:4px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(26px,6vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .compare .box{background:rgba(255,255,255,.06);border-radius:10px;padding:14px}
+  .compare .box h4{margin:0 0 6px;font-size:11px;letter-spacing:.06em;color:#C9C2E8;text-transform:uppercase}
+  .compare .box .n{font-size:22px;font-weight:800;margin:0}
+  .compare .box .s{font-size:11.5px;color:#8A82AD;margin-top:4px}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.lower{color:var(--green);font-weight:700}
+  td.higher{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Scalping vs Swing Cost Comparator</h1>
+    <p class="sub">Trade frequency has a cost most traders never add up. See what spread and commission actually eat from each style, side by side.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <p class="subhead">Scalping style</p>
+      <div class="field">
+        <label class="flabel" for="scalpTrades"><span>Trades per day</span>
+          <span class="val"><input type="number" id="scalpTrades" value="15" min="0" step="1"></span>
+        </label>
+      </div>
+
+      <p class="subhead">Swing style</p>
+      <div class="field">
+        <label class="flabel" for="swingTrades"><span>Trades per day</span>
+          <span class="val"><input type="number" id="swingTrades" value="1.5" min="0" step="0.1"></span>
+        </label>
+        <p class="hint">Can be a fraction, e.g. 1.5 = 3 trades every 2 days.</p>
+      </div>
+
+      <p class="subhead">Shared trading costs</p>
+      <div class="field">
+        <label class="flabel" for="days"><span>Trading days / month</span>
+          <span class="val"><input type="number" id="days" value="20" min="1" max="31" step="1"></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="spread"><span>Spread per trade</span>
+          <span class="val"><input type="number" id="spread" value="1.2" min="0" step="0.1"><span class="unit">pips</span></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="commission"><span>Commission per lot (one side)</span>
+          <span class="val"><input type="number" id="commission" value="7" min="0" step="0.5"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">Round-turn (open + close) is calculated automatically.</p>
+      </div>
+      <div class="field">
+        <label class="flabel" for="lotsize"><span>Average lot size</span>
+          <span class="val"><input type="number" id="lotsize" value="1" min="0.01" step="0.01"></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="pipvalue"><span>Pip value per lot</span>
+          <span class="val"><input type="number" id="pipvalue" value="10" min="0" step="0.5"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">$10/pip is standard for a EUR/USD-style pair, 1 lot.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">MONTHLY COST DIFFERENCE</p>
+        <p class="big"><span id="difference">—</span></p>
+        <div class="compare">
+          <div class="box">
+            <h4>Scalping</h4>
+            <p class="n" id="scalpTotal">—</p>
+            <p class="s" id="scalpTradesOut">— trades/month</p>
+          </div>
+          <div class="box">
+            <h4>Swing</h4>
+            <p class="n" id="swingTotal">—</p>
+            <p class="s" id="swingTradesOut">— trades/month</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Cost breakdown</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Style</th><th>Spread cost</th><th>Commission cost</th><th>Total / month</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Trades/month</b> = trades per day × trading days per month, for each style.<br><br>
+        <b>Spread cost</b> = trades × spread (pips) × pip value per lot × lot size. Spread is paid once per
+        trade, built into entry price.<br><br>
+        <b>Commission cost</b> = trades × commission per lot × lot size × 2 (round-turn: charged on both
+        entry and exit).<br><br>
+        This isolates the pure transaction-cost side of trading frequency — it doesn't model win rate,
+        strategy edge, or holding-cost factors like swap. A strategy can still be profitable at either
+        frequency; this just shows what volume alone costs before any edge is applied.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Cost math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  var $ = function(id){return document.getElementById(id);};
+
+  ['scalpTrades','swingTrades','days','spread','commission','lotsize','pipvalue'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function costs(tradesPerDay, days, spread, commission, lotsize, pipvalue){
+    var trades = tradesPerDay * days;
+    var spreadCost = trades * spread * pipvalue * lotsize;
+    var commissionCost = trades * commission * lotsize * 2;
+    var total = spreadCost + commissionCost;
+    return {trades: trades, spreadCost: spreadCost, commissionCost: commissionCost, total: total};
+  }
+
+  function calc(){
+    var scalpTrades = Math.max(0, num('scalpTrades', 0));
+    var swingTrades = Math.max(0, num('swingTrades', 0));
+    var days = Math.max(1, num('days', 20));
+    var spread = Math.max(0, num('spread', 0));
+    var commission = Math.max(0, num('commission', 0));
+    var lotsize = Math.max(0.01, num('lotsize', 1));
+    var pipvalue = Math.max(0, num('pipvalue', 10));
+
+    var scalp = costs(scalpTrades, days, spread, commission, lotsize, pipvalue);
+    var swing = costs(swingTrades, days, spread, commission, lotsize, pipvalue);
+
+    $('scalpTotal').textContent = usd0.format(scalp.total);
+    $('swingTotal').textContent = usd0.format(swing.total);
+    $('scalpTradesOut').textContent = Math.round(scalp.trades) + ' trades/month';
+    $('swingTradesOut').textContent = Math.round(swing.trades * 10) / 10 + ' trades/month';
+
+    var diff = scalp.total - swing.total;
+    $('difference').textContent = (diff >= 0 ? 'Scalping costs ' : 'Swing costs ') + usd0.format(Math.abs(diff)) + ' more/month';
+
+    $('tbody').innerHTML =
+      '<tr><td>Scalping</td><td>' + usd2.format(scalp.spreadCost) + '</td><td>' + usd2.format(scalp.commissionCost) + '</td><td class="' + (scalp.total > swing.total ? 'higher' : 'lower') + '">' + usd0.format(scalp.total) + '</td></tr>' +
+      '<tr><td>Swing</td><td>' + usd2.format(swing.spreadCost) + '</td><td>' + usd2.format(swing.commissionCost) + '</td><td class="' + (swing.total > scalp.total ? 'higher' : 'lower') + '">' + usd0.format(swing.total) + '</td></tr>';
+
+    if(scalp.trades === 0 && swing.trades === 0){
+      $('advice').textContent = 'Enter a trade frequency for at least one style to see the cost comparison.';
+      return;
+    }
+
+    var perTradeScalp = scalp.trades > 0 ? scalp.total / scalp.trades : 0;
+    var perTradeSwing = swing.trades > 0 ? swing.total / swing.trades : 0;
+
+    $('advice').innerHTML = 'At these settings, scalping racks up <b>' + Math.round(scalp.trades) +
+      ' trades/month</b> versus swing\'s ' + (Math.round(swing.trades*10)/10) +
+      '. Even with identical spread and commission per trade, that frequency gap alone accounts for the ' +
+      usd0.format(Math.abs(diff)) + ' difference \u2014 before either style has produced a single dollar of trading edge. ' +
+      'A scalping strategy needs a real edge per trade large enough to absorb costs around ' + usd2.format(perTradeScalp) + '/trade to break even on costs alone.';
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
