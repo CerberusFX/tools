@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gas Fee Impact Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:16px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .warnchip{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:20px;
+    font-size:12.5px;font-weight:700;background:rgba(214,69,69,.2);color:#FF9E9E}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.high{color:var(--red);font-weight:700}
+  td.low{color:var(--green);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Gas Fee Impact Calculator</h1>
+    <p class="sub">The same gas fee can be background noise or a third of your trade — see exactly how much network fees eat into your position size.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="gasfee"><span>Gas fee per transaction</span>
+          <span class="val"><input type="number" id="gasfee" value="15" min="0" step="0.5"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">Total cost to send/swap, in USD. Varies a lot by network and congestion.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="tradesize"><span>Trade / transfer size</span>
+          <span class="val"><input type="number" id="tradesize" value="500" min="1" step="10"><span class="unit">$</span></span>
+        </label>
+        <input type="range" id="tradesize_r" value="500" min="10" max="10000" step="10" aria-label="Trade size slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="txperday"><span>Transactions per month</span>
+          <span class="val"><input type="number" id="txperday" value="10" min="0" step="1"></span>
+        </label>
+        <p class="hint">How many on-chain transactions (swaps, transfers, claims) you make monthly.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="roundtrip"><span>Count both entry and exit?</span>
+          <span class="val"><input type="number" id="roundtrip" value="2" min="1" max="2" step="1"></span>
+        </label>
+        <p class="hint">Set to 2 if each trade needs a swap in and a swap out, 1 for one-way transfers.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">GAS COST AS % OF TRADE</p>
+        <p class="big"><span id="pctimpact">—</span>%</p>
+        <span id="warnslot"></span>
+        <div class="split">
+          <div>
+            <p class="k">Gas cost per trade (round-trip)</p>
+            <p class="v" id="perTrade">—</p>
+          </div>
+          <div>
+            <p class="k">Monthly gas total</p>
+            <p class="v" id="monthlyGas">—</p>
+          </div>
+          <div>
+            <p class="k">Annual gas total</p>
+            <p class="v" id="annualGas">—</p>
+          </div>
+          <div>
+            <p class="k">Break-even move needed</p>
+            <p class="v" id="breakeven">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Same gas fee, different trade sizes</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Trade size</th><th>Gas as % of trade</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Gas as % of trade</b> = (gas fee × round-trip count) ÷ trade size × 100. The gas fee itself doesn't
+        change with trade size, which is exactly why it hurts small trades disproportionately more.<br><br>
+        <b>Break-even move needed</b> is the minimum price move required just to cover the gas cost on a
+        round-trip trade, before any actual profit.<br><br>
+        <b>Monthly/annual totals</b> = gas fee × round-trip count × transactions per month (× 12 for annual).
+        Gas prices fluctuate significantly with network congestion — treat this as a planning estimate using
+        your own typical fee, not a live quote.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Fee math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  var $ = function(id){return document.getElementById(id);};
+
+  var pair = ['tradesize','tradesize_r'];
+  (function(){
+    var n = $(pair[0]), r = $(pair[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  })();
+
+  ['gasfee','txperday','roundtrip'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function calc(){
+    var gasfee = Math.max(0, num('gasfee', 0));
+    var tradesize = Math.max(1, num('tradesize', 1));
+    var txpermonth = Math.max(0, num('txperday', 0));
+    var roundtrip = Math.max(1, Math.min(2, num('roundtrip', 2)));
+
+    var perTrade = gasfee * roundtrip;
+    var pctImpact = (perTrade / tradesize) * 100;
+    var monthlyGas = gasfee * txpermonth;
+    var annualGas = monthlyGas * 12;
+
+    $('pctimpact').textContent = pctImpact.toFixed(2);
+    $('perTrade').textContent = usd2.format(perTrade);
+    $('monthlyGas').textContent = usd0.format(monthlyGas);
+    $('annualGas').textContent = usd0.format(annualGas);
+    $('breakeven').textContent = pctImpact.toFixed(2) + '% price move';
+
+    $('warnslot').innerHTML = pctImpact > 5
+      ? '<span class="warnchip">Gas is eating over 5% of this trade</span>'
+      : '';
+
+    var rows = [];
+    var sizes = [50, 100, 500, 1000, 5000, 10000];
+    if(sizes.indexOf(Math.round(tradesize)) === -1){
+      sizes.push(Math.round(tradesize));
+      sizes.sort(function(a,b){return a-b;});
+    }
+    sizes.forEach(function(s){
+      var pct = (perTrade / s) * 100;
+      var isYours = s === Math.round(tradesize);
+      rows.push('<tr><td>'+usd0.format(s)+(isYours?' (yours)':'')+'</td><td class="'+(pct>3?'high':'low')+'">'+pct.toFixed(2)+'%</td></tr>');
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    $('advice').innerHTML = 'At <b>' + usd2.format(perTrade) + ' gas per round-trip</b>, a ' + usd0.format(tradesize) +
+      ' trade needs to move <b>' + pctImpact.toFixed(2) + '%</b> in your favor just to cover fees before any profit starts. ' +
+      'The same fee on a much larger trade barely registers \u2014 which is why frequent small transactions are the ones gas costs hurt most.';
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
