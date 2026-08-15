@@ -16,7 +16,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 1. ✅ **Position Size Calculator** — Lotgröße aus Kontostand, Risiko-% und Stop-Distanz
 2. ⬜ Risk/Reward Calculator — R:R-Verhältnis, Breakeven-Winrate, Erwartungswert
 3. ✅ **Pip Value Calculator** — Pip-Wert je Paar, Lotgröße und Kontowährung
-4. ⬜ Drawdown Recovery Calculator — welcher Gewinn nötig ist, um X% Verlust auszugleichen
+4. ✅ **Drawdown Recovery Calculator** — welcher Gewinn nötig ist, um X% Verlust auszugleichen
 5. ⬜ Prop Firm Challenge Planner — Tagesziele, Max-Drawdown-Puffer, realistische Dauer
 6. ⬜ Expectancy Calculator — Erwartungswert pro Trade aus Winrate und Ø-Gewinn/Verlust
 7. ⬜ Kelly Criterion Calculator — optimale Positionsgröße plus Half-Kelly-Warnung
@@ -82,7 +82,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 51. ✅ **Impermanent Loss Calculator** — Verlust ggü. Halten bei Liquidity-Pool-Positionen
 52. ✅ **Staking Yield Calculator** — effektive APY nach Lock-up, Slashing-Risiko, Compound-Frequenz
 53. ⬜ DCA vs. Lump Sum Simulator — Durchschnittspreis-Strategie vs. Einmalanlage im Vergleich
-54. ⬜ Gas Fee Impact Calculator — wie stark Netzwerkgebühren kleine Trades auffressen
+54. ✅ **Gas Fee Impact Calculator** — wie stark Netzwerkgebühren kleine Trades auffressen
 55. ⬜ Portfolio Rebalancing Tool — Zielgewichtung vs. aktuelle Allokation, nötige Trades
 56. ⬜ Crypto Position Size Calculator — analog zu Forex, aber mit Volatilitäts-Anpassung
 57. ⬜ Stablecoin Yield Comparator — Rendite verschiedener Stablecoin-Strategien nebeneinander
@@ -188,7 +188,7 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 
 ---
 
-## Weitere Ideen (113–116, 121–122)
+## Weitere Ideen (113–116, 121–124)
 
 113. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
 114. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
@@ -196,6 +196,8 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 116. ⬜ Drawdown Recovery Curve — visual showing % gain needed to recover from X% loss
 121. ⬜ Debt Snowball Motivation Tracker — visual progress bar/streak view for each debt cleared, shareable milestone graphic
 122. ⬜ Cost-Per-Trade Breakeven Visualizer — chart showing the win rate or edge needed per trade to clear a given transaction-cost floor
+123. ⬜ Max Drawdown Budget Planner — set an acceptable max drawdown upfront and back-calculate the position sizing that keeps you inside it
+124. ⬜ Multi-Chain Gas Comparator — side-by-side typical gas costs across major chains/L2s for the same transaction type
 
 ---
 
@@ -221,22 +223,10 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 
 | Tool | Draft-ID | Termin (Budapest-Zeit) |
 |---|---|---|
-| Late Invoice Fee Calculator | 10076821 | 28.07. 11:58 |
-| Break-Even Calculator | 10078558 | 31.07. 17:07 |
-| Staking Yield Calculator | 10083330 | 01.08. 12:02 |
-| Meeting Cost Calculator | 10083333 | 02.08. 16:56 |
-| Candlestick Cheat Sheet | 10122090 | 03.08. 10:04 |
-| Head & Shoulders Cheat Sheet | 10127186 | 04.08. 10:03 |
-| Double Top/Bottom Cheat Sheet | 10127356 | 05.08. 12:02 |
-| Bull/Bear Flag Cheat Sheet | 10127359 | 06.08. 10:04 |
-| Fibonacci Retracement Cheat Sheet | 10127362 | 07.08. 10:03 |
-| Order Types Cheat Sheet | 10127364 | 08.08. 15:03 |
-| SMC Double Bottom & Order Block Cheat Sheet | 10178404 | 09.08. 10:07 |
-| Liquidity Sweep & Reversal Cheat Sheet | 10178408 | 10.08. 12:04 |
-| Fair Value Gap (FVG) Cheat Sheet | 10178413 | 11.08. 15:58 |
-| Support/Resistance Role Reversal | 10129584 | 30.07. 21:41 (Sonder-Post) |
 | Debt Payoff Planner | 10345696 | 17.08. 11:08 |
 | Scalping vs Swing Cost Comparator | 10345699 | 18.08. 15:54 |
+| Drawdown Recovery Calculator | 10350025 | 19.08. 10:47 |
+| Gas Fee Impact Calculator | 10350026 | 20.08. 15:59 |
 
 ## Workflow (fix)
 
@@ -245,10 +235,10 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 122 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 124 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
 8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets. Für Thumbnails bei v2-Sheets eigene Kompakt-Cover bauen statt das volle Sheet zu skalieren (siehe Hinweis im Charts & Visuals-Abschnitt).
 
-## Hinweis zu dieser Aktualisierung (15.08.)
+## Hinweis zur Terminliste
 
-Vor diesem Update kannte die Liste den tatsächlichen Repo-Zustand nicht vollständig: der Debt Payoff Planner (#21) war bereits im Repo vorhanden und funktionsfähig (aus einem früheren, nicht in der Liste verzeichneten Durchlauf), wurde hier unverändert gelassen und nur als ✅ nachgetragen. Neu in diesem Durchlauf gebaut: Scalping vs. Swing Cost Comparator (#77). Beide jetzt mit Thread verplant.
+Die Tabelle "Aktuell geplante Threads" listet nur die zuletzt in dieser Datei erfassten, noch nicht veröffentlichten Drafts. Ältere Termine (vor dem 17.08.) wurden bei diesem Update entfernt, da sie inzwischen veröffentlicht oder verstrichen sein dürften — bei Bedarf den tatsächlichen Status direkt in Typefully prüfen.
