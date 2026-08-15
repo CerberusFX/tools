@@ -36,7 +36,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 19. ⬜ Real Wage Checker — Gehaltsentwicklung vs. Inflation seit Jahr X
 20. ⬜ Loan vs. Lease Comparison — Gesamtkosten und Effektivzins nebeneinander
-21. ⬜ Debt Payoff Planner — Avalanche vs. Snowball, Zinsen und Laufzeit im Vergleich
+21. ✅ **Debt Payoff Planner** — Avalanche vs. Snowball, Zinsen und Laufzeit im Vergleich
 22. ⬜ Emergency Fund Calculator — Zielgröße nach Fixkosten und Einkommensstabilität
 23. ⬜ Mortgage Affordability Calculator — was du dir wirklich leisten kannst, nicht was die Bank sagt
 24. ⬜ Mortgage Overpayment Calculator — wie viele Jahre und Zinsen Sondertilgung spart
@@ -118,7 +118,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 74. ⬜ Moving Average Crossover Simulator — erwartetes Verhalten je MA-Kombination und Zeitrahmen
 75. ⬜ Grid Trading Profitability Calculator — Gitterabstand vs. Range vs. nötiges Kapital
 76. ⬜ Martingale/Anti-Martingale Risk Simulator — zeigt konkret das Ruin-Risiko von Progression
-77. ⬜ Scalping vs. Swing Cost Comparator — Spread-/Kommissionsanteil je Handelsstil
+77. ✅ **Scalping vs. Swing Cost Comparator** — Spread-/Kommissionsanteil je Handelsstil
 78. ⬜ Trading Style Fit Quiz — welcher Stil passt zu Zeitbudget, Risikotoleranz, Temperament
 79. ⬜ Breakout Strategy Simulator — erwartete Erfolgsquote bei X% Range-Ausbruch (parametrisiert)
 80. ⬜ Support/Resistance Bounce Calculator — historische Faustregeln zur Trefferquote an Levels
@@ -188,12 +188,14 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 
 ---
 
-## Weitere Ideen (113–116)
+## Weitere Ideen (113–116, 121–122)
 
 113. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
 114. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
 115. ⬜ Session Overlap Graphic — London/NY/Tokyo trading hours as a timezone bar chart
 116. ⬜ Drawdown Recovery Curve — visual showing % gain needed to recover from X% loss
+121. ⬜ Debt Snowball Motivation Tracker — visual progress bar/streak view for each debt cleared, shareable milestone graphic
+122. ⬜ Cost-Per-Trade Breakeven Visualizer — chart showing the win rate or edge needed per trade to clear a given transaction-cost floor
 
 ---
 
@@ -233,6 +235,8 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 | Liquidity Sweep & Reversal Cheat Sheet | 10178408 | 10.08. 12:04 |
 | Fair Value Gap (FVG) Cheat Sheet | 10178413 | 11.08. 15:58 |
 | Support/Resistance Role Reversal | 10129584 | 30.07. 21:41 (Sonder-Post) |
+| Debt Payoff Planner | 10345696 | 17.08. 11:08 |
+| Scalping vs Swing Cost Comparator | 10345699 | 18.08. 15:54 |
 
 ## Workflow (fix)
 
@@ -241,6 +245,10 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 120 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 122 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
 8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets. Für Thumbnails bei v2-Sheets eigene Kompakt-Cover bauen statt das volle Sheet zu skalieren (siehe Hinweis im Charts & Visuals-Abschnitt).
+
+## Hinweis zu dieser Aktualisierung (15.08.)
+
+Vor diesem Update kannte die Liste den tatsächlichen Repo-Zustand nicht vollständig: der Debt Payoff Planner (#21) war bereits im Repo vorhanden und funktionsfähig (aus einem früheren, nicht in der Liste verzeichneten Durchlauf), wurde hier unverändert gelassen und nur als ✅ nachgetragen. Neu in diesem Durchlauf gebaut: Scalping vs. Swing Cost Comparator (#77). Beide jetzt mit Thread verplant.
