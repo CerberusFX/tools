@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trading Account Compounding Simulator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .warnchip{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:20px;
+    font-size:12.5px;font-weight:700;background:rgba(214,69,69,.2);color:#FF9E9E}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.gain{color:var(--green);font-weight:700}
+  td.loss{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Trading Account Compounding Simulator</h1>
+    <p class="sub">See how a fixed % risk per trade compounds over many trades — and how sharply the outcome changes with small shifts in win rate or reward ratio.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="startbal"><span>Starting balance</span>
+          <span class="val"><input type="number" id="startbal" value="10000" min="0" step="500"><span class="unit">$</span></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="riskpct"><span>Risk per trade</span>
+          <span class="val"><input type="number" id="riskpct" value="1" min="0.1" max="10" step="0.1"><span class="unit">%</span></span>
+        </label>
+        <input type="range" id="riskpct_r" value="1" min="0.1" max="5" step="0.1" aria-label="Risk per trade slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="rewardr"><span>Reward per win</span>
+          <span class="val"><input type="number" id="rewardr" value="2" min="0.1" step="0.1"><span class="unit">R</span></span>
+        </label>
+        <p class="hint">In multiples of the risk amount, e.g. 2 = wins are twice the size of the risk.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="winrate"><span>Win rate</span>
+          <span class="val"><input type="number" id="winrate" value="50" min="1" max="99" step="1"><span class="unit">%</span></span>
+        </label>
+        <input type="range" id="winrate_r" value="50" min="1" max="99" step="1" aria-label="Win rate slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="numtrades"><span>Number of trades</span>
+          <span class="val"><input type="number" id="numtrades" value="100" min="1" max="1000" step="10"></span>
+        </label>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">FINAL BALANCE AFTER <span id="tradesLabel">100</span> TRADES</p>
+        <p class="big"><span id="finalbalance">—</span></p>
+        <span id="warnslot"></span>
+        <div class="split">
+          <div>
+            <p class="k">Total return</p>
+            <p class="v" id="totalreturn">—</p>
+          </div>
+          <div>
+            <p class="k">Max drawdown along the way</p>
+            <p class="v" id="maxdd">—</p>
+          </div>
+          <div>
+            <p class="k">Wins / Losses</p>
+            <p class="v" id="winloss">—</p>
+          </div>
+          <div>
+            <p class="k">Expectancy per trade</p>
+            <p class="v" id="expectancy">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Balance milestones</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Trade #</th><th>Balance</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p>Each trade risks a fixed <b>%</b> of the CURRENT balance (not the starting balance), so wins and
+        losses compound just like real fixed-fractional position sizing. Wins and losses are distributed evenly
+        across the trade sequence at your stated win rate, rather than randomized — this shows the
+        underlying compounding math clearly without random noise from any single simulated run.<br><br>
+        <b>Expectancy per trade</b> = (win rate × reward R) − (loss rate × 1R), expressed in R multiples.
+        Positive expectancy means the strategy should grow an account over many trades; negative expectancy
+        means it should shrink, regardless of position sizing.<br><br>
+        Real trading has randomness and streaks a smooth simulation doesn't capture — use this to understand
+        the shape of compounding, not as a promise of a specific outcome.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Simulation for illustration only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var $ = function(id){return document.getElementById(id);};
+
+  var pairs = [['riskpct','riskpct_r'],['winrate','winrate_r']];
+  pairs.forEach(function(p){
+    var n = $(p[0]), r = $(p[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  });
+
+  ['startbal','rewardr','numtrades'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function simulate(startBalance, riskPct, rewardR, winRatePct, trades){
+    var balance = startBalance;
+    var winRatio = winRatePct / 100;
+    var acc = 0;
+    var peak = balance, maxDD = 0;
+    var wins = 0, losses = 0;
+    var milestones = [];
+    var milestoneStep = Math.max(1, Math.round(trades / 10));
+
+    for(var i = 1; i <= trades; i++){
+      acc += winRatio;
+      var isWin = acc >= 1;
+      if(isWin) acc -= 1;
+      var riskAmount = balance * (riskPct / 100);
+      if(isWin){
+        balance += riskAmount * rewardR;
+        wins++;
+      } else {
+        balance -= riskAmount;
+        losses++;
+      }
+      if(balance > peak) peak = balance;
+      var dd = peak > 0 ? (peak - balance) / peak * 100 : 0;
+      if(dd > maxDD) maxDD = dd;
+
+      if(i % milestoneStep === 0 || i === trades){
+        milestones.push({trade: i, balance: balance});
+      }
+    }
+
+    return {finalBalance: balance, maxDD: maxDD, wins: wins, losses: losses, milestones: milestones};
+  }
+
+  function calc(){
+    var startbal = Math.max(0, num('startbal', 10000));
+    var riskpct = Math.max(0.1, num('riskpct', 1));
+    var rewardr = Math.max(0.1, num('rewardr', 2));
+    var winrate = Math.max(1, Math.min(99, num('winrate', 50)));
+    var numtrades = Math.max(1, Math.min(1000, Math.round(num('numtrades', 100))));
+
+    var result = simulate(startbal, riskpct, rewardr, winrate, numtrades);
+    var totalReturnPct = startbal > 0 ? ((result.finalBalance - startbal) / startbal) * 100 : 0;
+    var expectancyR = (winrate/100 * rewardr) - ((100-winrate)/100 * 1);
+
+    $('tradesLabel').textContent = numtrades;
+    $('finalbalance').textContent = usd0.format(result.finalBalance);
+    $('totalreturn').textContent = (totalReturnPct >= 0 ? '+' : '') + totalReturnPct.toFixed(1) + '%';
+    $('maxdd').textContent = result.maxDD.toFixed(1) + '%';
+    $('winloss').textContent = result.wins + ' / ' + result.losses;
+    $('expectancy').textContent = (expectancyR >= 0 ? '+' : '') + expectancyR.toFixed(2) + 'R';
+
+    $('warnslot').innerHTML = expectancyR <= 0
+      ? '<span class="warnchip">Negative expectancy — this setup loses money over time regardless of sizing</span>'
+      : '';
+
+    var rows = result.milestones.map(function(m){
+      var pct = startbal > 0 ? ((m.balance - startbal)/startbal)*100 : 0;
+      return '<tr><td>' + m.trade + '</td><td class="' + (pct>=0?'gain':'loss') + '">' + usd0.format(m.balance) + '</td></tr>';
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    if(expectancyR <= 0){
+      $('advice').innerHTML = 'At a ' + winrate + '% win rate with ' + rewardr + 'R reward, this setup has <b>negative expectancy</b> (' +
+        expectancyR.toFixed(2) + 'R per trade). No position sizing fixes negative expectancy — fixed % risk just compounds the losses instead of the gains.';
+    } else {
+      $('advice').innerHTML = 'At ' + riskpct + '% risk per trade with ' + expectancyR.toFixed(2) +
+        'R expectancy, the account compounds from ' + usd0.format(startbal) + ' to <b>' + usd0.format(result.finalBalance) +
+        '</b> over ' + numtrades + ' trades — with a max drawdown of ' + result.maxDD.toFixed(1) +
+        '% along the way. Note how much drawdown moves with risk % even at the same expectancy — try adjusting risk per trade to see the tradeoff.';
+    }
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
