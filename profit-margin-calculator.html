@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profit Margin Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:120px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Profit Margin Calculator</h1>
+    <p class="sub">Gross margin, net margin, and where the money actually goes between them — all in one view.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="revenue"><span>Revenue</span>
+          <span class="val"><input type="number" id="revenue" value="100000" min="0" step="1000"><span class="unit">$</span></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="cogs"><span>Cost of goods sold (COGS)</span>
+          <span class="val"><input type="number" id="cogs" value="60000" min="0" step="1000"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">Direct costs of producing what you sell: materials, direct labor, hosting for a digital product.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="opex"><span>Operating expenses</span>
+          <span class="val"><input type="number" id="opex" value="25000" min="0" step="1000"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">Everything else: rent, salaries not tied to production, marketing, software, admin.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">NET PROFIT MARGIN</p>
+        <p class="big"><span id="netmargin">—</span>%</p>
+        <div class="split">
+          <div>
+            <p class="k">Gross profit</p>
+            <p class="v" id="grossprofit">—</p>
+          </div>
+          <div>
+            <p class="k">Gross margin</p>
+            <p class="v" id="grossmargin">—</p>
+          </div>
+          <div>
+            <p class="k">Net profit</p>
+            <p class="v" id="netprofit">—</p>
+          </div>
+          <div>
+            <p class="k">Operating expense ratio</p>
+            <p class="v" id="opexratio">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Where every dollar of revenue goes</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Category</th><th>Amount</th><th>% of revenue</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Gross profit</b> = revenue − COGS. <b>Gross margin</b> = gross profit ÷ revenue × 100.<br><br>
+        <b>Net profit</b> = gross profit − operating expenses. <b>Net margin</b> = net profit ÷ revenue × 100.<br><br>
+        Gross margin shows how efficiently you produce what you sell. Net margin shows what's actually left
+        after running the whole business — the gap between the two is your operating expense load, and a
+        large or growing gap is often where profitability problems hide even when gross margin looks healthy.<br><br>
+        Healthy margins vary enormously by industry — software businesses often see 70-90% gross margins,
+        while retail or manufacturing commonly run 20-50%. Compare against your own industry, not a universal
+        benchmark.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Margin math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var $ = function(id){return document.getElementById(id);};
+
+  ['revenue','cogs','opex'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function calc(){
+    var revenue = Math.max(0, num('revenue', 0));
+    var cogs = Math.max(0, num('cogs', 0));
+    var opex = Math.max(0, num('opex', 0));
+
+    var grossProfit = revenue - cogs;
+    var grossMarginPct = revenue > 0 ? (grossProfit/revenue)*100 : 0;
+    var netProfit = grossProfit - opex;
+    var netMarginPct = revenue > 0 ? (netProfit/revenue)*100 : 0;
+    var opexRatio = revenue > 0 ? (opex/revenue)*100 : 0;
+
+    $('netmargin').textContent = netMarginPct.toFixed(1);
+    $('grossprofit').textContent = usd0.format(grossProfit);
+    $('grossmargin').textContent = grossMarginPct.toFixed(1) + '%';
+    $('netprofit').textContent = usd0.format(netProfit);
+    $('opexratio').textContent = opexRatio.toFixed(1) + '%';
+
+    var cogsPct = revenue > 0 ? (cogs/revenue)*100 : 0;
+    var opexPct = opexRatio;
+    var netPct = netMarginPct;
+
+    $('tbody').innerHTML =
+      '<tr><td>Revenue</td><td>'+usd0.format(revenue)+'</td><td>100.0%</td></tr>' +
+      '<tr><td>− COGS</td><td>'+usd0.format(cogs)+'</td><td>'+cogsPct.toFixed(1)+'%</td></tr>' +
+      '<tr><td>= Gross profit</td><td>'+usd0.format(grossProfit)+'</td><td>'+grossMarginPct.toFixed(1)+'%</td></tr>' +
+      '<tr><td>− Operating expenses</td><td>'+usd0.format(opex)+'</td><td>'+opexPct.toFixed(1)+'%</td></tr>' +
+      '<tr><td><b>= Net profit</b></td><td><b>'+usd0.format(netProfit)+'</b></td><td><b>'+netPct.toFixed(1)+'%</b></td></tr>';
+
+    if(netProfit < 0){
+      $('advice').innerHTML = 'At these numbers, the business is running at a <b>net loss</b> of ' + usd0.format(Math.abs(netProfit)) +
+        '. Gross margin is ' + grossMarginPct.toFixed(1) + '%, but operating expenses (' + opexRatio.toFixed(1) +
+        '% of revenue) exceed what\u2019s left after COGS — the fix is either raising gross margin, cutting operating costs, or growing revenue faster than opex.';
+    } else {
+      $('advice').innerHTML = 'Out of every dollar of revenue, ' + (grossMarginPct/100).toFixed(2) + ' becomes gross profit, and after operating expenses, <b>' +
+        netMarginPct.toFixed(1) + ' cents</b> ends up as net profit. The gap between gross margin (' + grossMarginPct.toFixed(1) +
+        '%) and net margin (' + netMarginPct.toFixed(1) + '%) is your operating expense load — worth tracking over time to see if it\u2019s growing faster than revenue.';
+    }
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
