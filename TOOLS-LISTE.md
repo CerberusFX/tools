@@ -18,7 +18,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 3. ✅ **Pip Value Calculator** — Pip-Wert je Paar, Lotgröße und Kontowährung
 4. ✅ **Drawdown Recovery Calculator** — welcher Gewinn nötig ist, um X% Verlust auszugleichen
 5. ⬜ Prop Firm Challenge Planner — Tagesziele, Max-Drawdown-Puffer, realistische Dauer
-6. ⬜ Expectancy Calculator — Erwartungswert pro Trade aus Winrate und Ø-Gewinn/Verlust
+6. ✅ **Expectancy Calculator** — Erwartungswert pro Trade aus Winrate und Ø-Gewinn/Verlust
 7. ✅ **Kelly Criterion Calculator** — optimale Positionsgröße plus Half-Kelly-Warnung
 8. ✅ **Margin & Leverage Calculator** — benötigte Margin, freie Margin, Margin-Call-Level
 9. ✅ **Trading Account Compounding Simulator** — Kontowachstum bei fixem R pro Trade
@@ -62,7 +62,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 39. ⬜ Project Quote Builder — Aufwandsschätzung mit Puffer und Risikoaufschlag
 40. ✅ **Invoice Late-Payment Cost** — was verspätete Zahlungen dich wirklich kosten *(als "Late Invoice Fee Calculator" umgesetzt)*
 41. ⬜ Retainer vs. Hourly Calculator — welches Modell bei deiner Auslastung besser trägt
-42. ⬜ Customer Acquisition Cost Calculator — CAC, LTV und das Verhältnis dazwischen
+42. ✅ **Customer Acquisition Cost Calculator** — CAC, LTV und das Verhältnis dazwischen
 43. ⬜ Profit Margin Calculator — Brutto-, Netto- und Deckungsbeitragsmarge in einem
 44. ⬜ Freelance Vacation Cost Calculator — was eine Woche Urlaub tatsächlich kostet
 
@@ -84,7 +84,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 53. ⬜ DCA vs. Lump Sum Simulator — Durchschnittspreis-Strategie vs. Einmalanlage im Vergleich
 54. ✅ **Gas Fee Impact Calculator** — wie stark Netzwerkgebühren kleine Trades auffressen
 55. ⬜ Portfolio Rebalancing Tool — Zielgewichtung vs. aktuelle Allokation, nötige Trades
-56. ⬜ Crypto Position Size Calculator — analog zu Forex, aber mit Volatilitäts-Anpassung
+56. ✅ **Crypto Position Size Calculator** — analog zu Forex, aber mit Volatilitäts-Anpassung
 57. ⬜ Stablecoin Yield Comparator — Rendite verschiedener Stablecoin-Strategien nebeneinander
 58. ⬜ Halving Cycle Timeline — historische Abstände, Countdown zum nächsten Event
 
@@ -188,7 +188,7 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 
 ---
 
-## Weitere Ideen (113–116, 121–130)
+## Weitere Ideen (113–116, 121–133)
 
 113. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
 114. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
@@ -204,6 +204,9 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 128. ⬜ Client Rate Increase Calculator — companion to profitability calculator: what raise closes the gap between a client's effective rate and target rate
 129. ⬜ Random Sequence Equity Curve Comparator — same win rate/R shown across several randomized trade orderings, to show sequence risk beyond the smoothed compounding view
 130. ⬜ Runway Extension Planner — companion to runway calculator: side-by-side impact of cutting a specific expense vs. adding a specific revenue amount
+131. ⬜ Break-Even Win Rate Visualizer — companion to expectancy calculator: interactive chart showing required win rate across a range of reward:risk ratios
+132. ⬜ Marketing Channel CAC Comparator — companion to CAC calculator: compare acquisition cost and LTV ratio side by side across multiple channels
+133. ⬜ Crypto Portfolio Correlation Checker — flags concentrated risk when multiple held coins move together, similar to the forex correlation checker idea
 
 ---
 
@@ -229,14 +232,13 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 
 | Tool | Draft-ID | Termin (Budapest-Zeit) |
 |---|---|---|
-| Drawdown Recovery Calculator | 10350025 | 19.08. 10:47 |
-| Gas Fee Impact Calculator | 10350026 | 20.08. 15:59 |
-| Kelly Criterion Calculator | 10354010 | 21.08. 10:56 |
-| Mortgage Affordability Calculator | 10354012 | 22.08. 15:52 |
 | Margin & Leverage Calculator | 10354514 | 23.08. 11:03 |
 | Client Profitability Calculator | 10354516 | 24.08. 15:47 |
 | Trading Account Compounding Simulator | 10354594 | 25.08. 10:59 |
 | Runway Calculator | 10354595 | 26.08. 15:51 |
+| Expectancy Calculator | 10358686 | 27.08. 10:52 |
+| Customer Acquisition Cost Calculator | 10358689 | 28.08. 15:58 |
+| Crypto Position Size Calculator | 10358692 | 29.08. 11:07 |
 
 ## Workflow (fix)
 
@@ -245,7 +247,7 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 130 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen (proportional mehr bei größeren Batches), damit ~50 Einträge erhalten bleiben (Stand jetzt: 133 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
 8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets. Für Thumbnails bei v2-Sheets eigene Kompakt-Cover bauen statt das volle Sheet zu skalieren (siehe Hinweis im Charts & Visuals-Abschnitt).
 
