@@ -22,7 +22,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 7. ✅ **Kelly Criterion Calculator** — optimale Positionsgröße plus Half-Kelly-Warnung
 8. ✅ **Margin & Leverage Calculator** — benötigte Margin, freie Margin, Margin-Call-Level
 9. ✅ **Trading Account Compounding Simulator** — Kontowachstum bei fixem R pro Trade
-10. ⬜ Max Consecutive Loss Simulator — wie wahrscheinlich eine Pechsträhne bei deiner Winrate ist
+10. ✅ **Max Consecutive Loss Simulator** — wie wahrscheinlich eine Pechsträhne bei deiner Winrate ist
 11. ⬜ Break-Even Win Rate Calculator — nötige Trefferquote je R:R-Verhältnis
 12. ⬜ Swap / Carry Cost Calculator — Haltekosten über Nacht und über Wochen
 13. ⬜ Trade Journal Stats Calculator — Winrate, Profit Factor, Ø-R aus eingegebenen Trades
@@ -43,7 +43,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 25. ⬜ Rent vs. Buy Calculator — Break-even-Jahr für Kauf statt Miete
 26. ⬜ Savings Goal Timeline — wann du dein Ziel erreichst, bei welcher Sparrate
 27. ✅ **Salary Take-Home Calculator** — Brutto zu Netto mit einstellbarer Abgabenquote *(als "Freelancer Take-Home Calculator" umgesetzt)*
-28. ⬜ Inflation Impact Calculator — was dein Geld in 10/20/30 Jahren noch wert ist
+28. ✅ **Inflation Impact Calculator** — was dein Geld in 10/20/30 Jahren noch wert ist
 29. ⬜ Two-Income Household Planner — Fixkosten auf ein Einkommen umgestellt, Notfall-Check
 30. ⬜ Car Total Cost of Ownership — echter Preis pro Kilometer über die Haltedauer
 31. ⬜ Subscription Audit Tool — Jahreskosten aller Abos, sortiert nach Nutzen
@@ -63,7 +63,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 40. ✅ **Invoice Late-Payment Cost** — was verspätete Zahlungen dich wirklich kosten *(als "Late Invoice Fee Calculator" umgesetzt)*
 41. ⬜ Retainer vs. Hourly Calculator — welches Modell bei deiner Auslastung besser trägt
 42. ✅ **Customer Acquisition Cost Calculator** — CAC, LTV und das Verhältnis dazwischen
-43. ⬜ Profit Margin Calculator — Brutto-, Netto- und Deckungsbeitragsmarge in einem
+43. ✅ **Profit Margin Calculator** — Brutto-, Netto- und Deckungsbeitragsmarge in einem
 44. ⬜ Freelance Vacation Cost Calculator — was eine Woche Urlaub tatsächlich kostet
 
 ## Produktivität & Sonstiges (45–50)
@@ -188,7 +188,7 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 
 ---
 
-## Weitere Ideen (113–116, 121–133)
+## Weitere Ideen (113–116, 121–136)
 
 113. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
 114. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
@@ -207,6 +207,9 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 131. ⬜ Break-Even Win Rate Visualizer — companion to expectancy calculator: interactive chart showing required win rate across a range of reward:risk ratios
 132. ⬜ Marketing Channel CAC Comparator — companion to CAC calculator: compare acquisition cost and LTV ratio side by side across multiple channels
 133. ⬜ Crypto Portfolio Correlation Checker — flags concentrated risk when multiple held coins move together, similar to the forex correlation checker idea
+134. ⬜ Winning Streak Confidence Checker — companion to the consecutive loss simulator: how many wins in a row can mislead you into overestimating a real edge
+135. ⬜ Real Wage Growth Visualizer — companion to inflation calculator: plots actual salary growth against inflation year by year to show real (not nominal) raise history
+136. ⬜ Margin Trend Tracker — companion to profit margin calculator: log margins period over period and flag when the gross-to-net gap is widening faster than revenue growth
 
 ---
 
@@ -232,13 +235,12 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 
 | Tool | Draft-ID | Termin (Budapest-Zeit) |
 |---|---|---|
-| Margin & Leverage Calculator | 10354514 | 23.08. 11:03 |
-| Client Profitability Calculator | 10354516 | 24.08. 15:47 |
-| Trading Account Compounding Simulator | 10354594 | 25.08. 10:59 |
-| Runway Calculator | 10354595 | 26.08. 15:51 |
 | Expectancy Calculator | 10358686 | 27.08. 10:52 |
 | Customer Acquisition Cost Calculator | 10358689 | 28.08. 15:58 |
 | Crypto Position Size Calculator | 10358692 | 29.08. 11:07 |
+| Max Consecutive Loss Simulator | 10358897 | 30.08. 10:51 |
+| Inflation Impact Calculator | 10358899 | 31.08. 15:56 |
+| Profit Margin Calculator | 10358902 | 01.09. 11:04 |
 
 ## Workflow (fix)
 
@@ -247,7 +249,7 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen (proportional mehr bei größeren Batches), damit ~50 Einträge erhalten bleiben (Stand jetzt: 133 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen (proportional mehr bei größeren Batches), damit ~50 Einträge erhalten bleiben (Stand jetzt: 136 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
 8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets. Für Thumbnails bei v2-Sheets eigene Kompakt-Cover bauen statt das volle Sheet zu skalieren (siehe Hinweis im Charts & Visuals-Abschnitt).
 
