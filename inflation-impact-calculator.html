@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inflation Impact Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.loss{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Inflation Impact Calculator</h1>
+    <p class="sub">See what your money will actually be worth in the future — and how much return you need just to stand still.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="amount"><span>Amount today</span>
+          <span class="val"><input type="number" id="amount" value="10000" min="0" step="500"><span class="unit">$</span></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="inflation"><span>Annual inflation rate</span>
+          <span class="val"><input type="number" id="inflation" value="3" min="0" max="20" step="0.1"><span class="unit">%</span></span>
+        </label>
+        <input type="range" id="inflation_r" value="3" min="0" max="15" step="0.1" aria-label="Inflation rate slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="years"><span>Time horizon</span>
+          <span class="val"><input type="number" id="years" value="10" min="1" max="50" step="1"><span class="unit">yrs</span></span>
+        </label>
+        <input type="range" id="years_r" value="10" min="1" max="40" step="1" aria-label="Years slider">
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">FUTURE PURCHASING POWER</p>
+        <p class="big"><span id="futurevalue">—</span></p>
+        <div class="split">
+          <div>
+            <p class="k">Purchasing power lost</p>
+            <p class="v" id="lostpct">—</p>
+          </div>
+          <div>
+            <p class="k">Return needed just to keep pace</p>
+            <p class="v" id="breakevenreturn">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Purchasing power over time</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Year</th><th>Worth (today's dollars)</th><th>Lost</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Future purchasing power</b> = amount today ÷ (1 + inflation rate)^years. This shows what today's
+        dollar amount will actually be able to buy in the future, expressed in today's dollars.<br><br>
+        <b>Return needed to keep pace</b> equals the inflation rate itself — any investment or savings return
+        below this rate means you're losing purchasing power in real terms, even while the nominal dollar
+        amount grows.<br><br>
+        This uses a constant inflation rate assumption for simplicity. Real inflation varies year to year and
+        differs by what you're actually buying (housing, healthcare, and education have often outpaced general
+        inflation figures) — use this for the general shape of the problem, not a precise forecast.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Inflation math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var $ = function(id){return document.getElementById(id);};
+
+  var pairs = [['inflation','inflation_r'],['years','years_r']];
+  pairs.forEach(function(p){
+    var n = $(p[0]), r = $(p[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  });
+
+  $('amount').addEventListener('input', calc);
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function calc(){
+    var amount = Math.max(0, num('amount', 10000));
+    var inflation = Math.max(0, num('inflation', 3));
+    var years = Math.max(1, Math.round(num('years', 10)));
+
+    var futureValue = amount / Math.pow(1 + inflation/100, years);
+    var lostPct = amount > 0 ? (1 - futureValue/amount) * 100 : 0;
+
+    $('futurevalue').textContent = usd0.format(futureValue);
+    $('lostpct').textContent = lostPct.toFixed(1) + '%';
+    $('breakevenreturn').textContent = inflation.toFixed(1) + '%/yr';
+
+    var rows = [];
+    var checkpoints = [1, 5, 10, 20, years];
+    checkpoints = checkpoints.filter(function(y){ return y <= years; })
+      .filter(function(v,i,arr){ return arr.indexOf(v) === i; })
+      .sort(function(a,b){return a-b;});
+    if(checkpoints.indexOf(years) === -1) checkpoints.push(years);
+
+    checkpoints.forEach(function(y){
+      var fv = amount / Math.pow(1 + inflation/100, y);
+      var lost = amount > 0 ? (1 - fv/amount) * 100 : 0;
+      var isYours = y === years;
+      rows.push('<tr><td>Year '+y+(isYours?' (yours)':'')+'</td><td>'+usd0.format(fv)+'</td><td class="loss">-'+lost.toFixed(1)+'%</td></tr>');
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    $('advice').innerHTML = 'At <b>' + inflation.toFixed(1) + '% inflation</b>, ' + usd0.format(amount) + ' today will only buy what <b>' +
+      usd0.format(futureValue) + '</b> buys now, ' + years + ' years from now — a ' + lostPct.toFixed(1) +
+      '% loss in purchasing power. Any savings or investment earning less than ' + inflation.toFixed(1) +
+      '% per year is losing real value, even if the number on the statement keeps going up.';
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
