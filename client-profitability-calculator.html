@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client Profitability Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:360px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .clientrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--panel)}
+  .clientrow-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .clientrow-head input[type=text]{
+    border:none;background:transparent;font-size:13.5px;font-weight:700;color:var(--ink-2);
+    padding:2px 0;font-family:inherit;width:60%;
+  }
+  .removebtn{background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-weight:600;padding:2px 6px}
+  .clientfields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .cfield label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+  .cfield input{
+    width:100%;font-size:13px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--white);border-radius:6px;
+    padding:6px 6px;font-family:inherit;box-sizing:border-box;
+  }
+  .addbtn{
+    width:100%;padding:10px;border-radius:8px;border:1px dashed var(--accent);
+    background:transparent;color:var(--accent-d);font-weight:700;font-size:13px;
+    cursor:pointer;font-family:inherit;margin-top:4px
+  }
+  .addbtn:hover{background:var(--panel)}
+
+  .field{margin:16px 0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(24px,5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin:0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:10.5px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.best{color:var(--green);font-weight:700}
+  td.worst{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Client Profitability Calculator</h1>
+    <p class="sub">Two clients can pay the same invoice total and be wildly different in profitability once you factor in the hours they actually cost you.</p>
+  </header>
+
+  <div class="grid">
+
+    <div class="card">
+      <div id="clientlist"></div>
+      <button type="button" class="addbtn" id="addclient">+ Add another client</button>
+
+      <div class="field">
+        <label class="flabel" for="baserate"><span>Your target hourly rate</span>
+          <span class="val"><input type="number" id="baserate" value="75" min="0" step="5"><span class="unit">$</span></span>
+        </label>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:6px">Used as the benchmark to compare each client's effective rate against.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">MOST PROFITABLE CLIENT</p>
+        <p class="big" id="topclient">—</p>
+      </div>
+
+      <h2>Client comparison</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Client</th><th>Monthly profit</th><th>Effective $/hr</th><th>vs. target</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Total cost</b> = (hours per month × your hourly cost) + other direct costs (software, contractor
+        fees, etc. tied to that client).<br><br>
+        <b>Monthly profit</b> = monthly revenue from client − total cost.<br><br>
+        <b>Effective hourly rate</b> = monthly revenue ÷ hours spent. This is the number that actually matters
+        — a client paying a high invoice total but eating huge amounts of time can have a lower effective rate
+        than a smaller client who barely needs support.<br><br>
+        <b>vs. target</b> compares the effective rate to your stated target hourly rate, so you can spot which
+        clients are quietly subsidized by the profitable ones.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Client math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  var $ = function(id){return document.getElementById(id);};
+
+  var defaultClients = [
+    {name:'Client A', revenue:3000, hours:10, hourlycost:50, othercost:100},
+    {name:'Client B', revenue:2000, hours:25, hourlycost:50, othercost:100},
+    {name:'Client C', revenue:1500, hours:8, hourlycost:50, othercost:50}
+  ];
+  var clientCounter = 0;
+
+  function escapeAttr(s){
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  }
+
+  function renderClientRow(c, idx){
+    var row = document.createElement('div');
+    row.className = 'clientrow';
+    row.dataset.idx = idx;
+    row.innerHTML =
+      '<div class="clientrow-head">' +
+        '<input type="text" class="cname" value="' + escapeAttr(c.name) + '" aria-label="Client name">' +
+        '<button type="button" class="removebtn" aria-label="Remove client">Remove</button>' +
+      '</div>' +
+      '<div class="clientfields">' +
+        '<div class="cfield"><label>Monthly $</label><input type="number" class="crevenue" value="' + c.revenue + '" min="0" step="50"></div>' +
+        '<div class="cfield"><label>Hours/mo</label><input type="number" class="chours" value="' + c.hours + '" min="0" step="1"></div>' +
+        '<div class="cfield"><label>Other costs</label><input type="number" class="cother" value="' + c.othercost + '" min="0" step="10"></div>' +
+      '</div>';
+    return row;
+  }
+
+  function initList(){
+    var list = $('clientlist');
+    list.innerHTML = '';
+    defaultClients.forEach(function(c, i){
+      list.appendChild(renderClientRow(c, i));
+    });
+    clientCounter = defaultClients.length;
+    attachRowListeners();
+  }
+
+  function attachRowListeners(){
+    var list = $('clientlist');
+    list.querySelectorAll('input').forEach(function(inp){
+      inp.removeEventListener('input', calc);
+      inp.addEventListener('input', calc);
+    });
+    list.querySelectorAll('.removebtn').forEach(function(btn){
+      btn.onclick = function(){
+        var row = btn.closest('.clientrow');
+        if(list.children.length > 1){
+          row.remove();
+          calc();
+        }
+      };
+    });
+  }
+
+  $('addclient').addEventListener('click', function(){
+    clientCounter++;
+    var row = renderClientRow({name:'Client ' + String.fromCharCode(64 + clientCounter), revenue:1500, hours:10, hourlycost:50, othercost:50}, clientCounter);
+    $('clientlist').appendChild(row);
+    attachRowListeners();
+    calc();
+  });
+
+  $('baserate').addEventListener('input', calc);
+
+  function num(val, def){
+    var v = parseFloat(val);
+    return isNaN(v) ? def : v;
+  }
+
+  function readClients(baserate){
+    var rows = $('clientlist').querySelectorAll('.clientrow');
+    var clients = [];
+    rows.forEach(function(row){
+      var name = row.querySelector('.cname').value || 'Client';
+      var revenue = Math.max(0, num(row.querySelector('.crevenue').value, 0));
+      var hours = Math.max(0, num(row.querySelector('.chours').value, 0));
+      var othercost = Math.max(0, num(row.querySelector('.cother').value, 0));
+      var laborCost = hours * baserate;
+      var totalCost = laborCost + othercost;
+      var profit = revenue - totalCost;
+      var effectiveRate = hours > 0 ? revenue / hours : revenue > 0 ? Infinity : 0;
+      clients.push({name:name, revenue:revenue, hours:hours, othercost:othercost, profit:profit, effectiveRate:effectiveRate});
+    });
+    return clients;
+  }
+
+  function calc(){
+    var baserate = Math.max(1, num($('baserate').value, 75));
+    var clients = readClients(baserate);
+
+    if(clients.length === 0){
+      $('topclient').textContent = '—';
+      $('tbody').innerHTML = '';
+      $('advice').textContent = 'Add at least one client to see the comparison.';
+      return;
+    }
+
+    var sorted = clients.slice().sort(function(a,b){
+      var ar = isFinite(a.effectiveRate) ? a.effectiveRate : 1e12;
+      var br = isFinite(b.effectiveRate) ? b.effectiveRate : 1e12;
+      return br - ar;
+    });
+    var top = sorted[0];
+    var bottom = sorted[sorted.length - 1];
+
+    $('topclient').textContent = top.name + ' \u2014 ' + (isFinite(top.effectiveRate) ? usd2.format(top.effectiveRate) + '/hr effective' : usd0.format(top.revenue) + ' (no hours logged)');
+
+    var rows = clients.map(function(c){
+      var isTop = c === top && clients.length > 1;
+      var isBottom = c === bottom && clients.length > 1 && bottom.effectiveRate !== top.effectiveRate;
+      var rateStr = isFinite(c.effectiveRate) ? usd2.format(c.effectiveRate) : 'n/a';
+      var vsTarget = isFinite(c.effectiveRate) ? (c.effectiveRate >= baserate ? '+' : '') + (c.effectiveRate - baserate).toFixed(0) : '\u2014';
+      var cls = isTop ? 'best' : (isBottom ? 'worst' : '');
+      return '<tr><td>'+c.name+'</td><td>'+usd0.format(c.profit)+'</td><td class="'+cls+'">'+rateStr+'</td><td>'+vsTarget+'</td></tr>';
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    if(clients.length > 1 && bottom.effectiveRate < baserate){
+      $('advice').innerHTML = '<b>' + bottom.name + '</b> has an effective rate of ' +
+        (isFinite(bottom.effectiveRate) ? usd2.format(bottom.effectiveRate) : 'n/a') + '/hr, below your ' +
+        usd2.format(baserate) + '/hr target. That gap gets quietly covered by your more profitable clients \u2014 worth a rate conversation or a hard look at the hours this client actually needs.';
+    } else {
+      $('advice').innerHTML = 'All clients are currently at or above your ' + usd2.format(baserate) +
+        '/hr target effective rate. Keep tracking hours per client \u2014 scope creep is usually gradual, not sudden.';
+    }
+  }
+
+  initList();
+  calc();
+})();
+</script>
+</body>
+</html>
