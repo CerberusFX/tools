@@ -21,7 +21,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 6. ⬜ Expectancy Calculator — Erwartungswert pro Trade aus Winrate und Ø-Gewinn/Verlust
 7. ✅ **Kelly Criterion Calculator** — optimale Positionsgröße plus Half-Kelly-Warnung
 8. ✅ **Margin & Leverage Calculator** — benötigte Margin, freie Margin, Margin-Call-Level
-9. ⬜ Trading Account Compounding Simulator — Kontowachstum bei fixem R pro Trade
+9. ✅ **Trading Account Compounding Simulator** — Kontowachstum bei fixem R pro Trade
 10. ⬜ Max Consecutive Loss Simulator — wie wahrscheinlich eine Pechsträhne bei deiner Winrate ist
 11. ⬜ Break-Even Win Rate Calculator — nötige Trefferquote je R:R-Verhältnis
 12. ⬜ Swap / Carry Cost Calculator — Haltekosten über Nacht und über Wochen
@@ -57,7 +57,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 34. ⬜ Service Pricing Calculator — Stundensatz aus Wunschgewinn, Auslastung und Fixkosten
 35. ✅ **Client Profitability Calculator** — welcher Kunde nach Zeitaufwand wirklich lohnt
 36. ⬜ Price Increase Simulator — wie viele Kunden du verlieren darfst und trotzdem gewinnst
-37. ⬜ Runway Calculator — wie lange das Geld reicht, mit und ohne erwartete Einnahmen
+37. ✅ **Runway Calculator** — wie lange das Geld reicht, mit und ohne erwartete Einnahmen
 38. ⬜ Hire vs. Outsource Calculator — Break-even-Punkt einer Einstellung
 39. ⬜ Project Quote Builder — Aufwandsschätzung mit Puffer und Risikoaufschlag
 40. ✅ **Invoice Late-Payment Cost** — was verspätete Zahlungen dich wirklich kosten *(als "Late Invoice Fee Calculator" umgesetzt)*
@@ -188,7 +188,7 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 
 ---
 
-## Weitere Ideen (113–116, 121–128)
+## Weitere Ideen (113–116, 121–130)
 
 113. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
 114. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
@@ -202,6 +202,8 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 126. ⬜ Rent vs. Buy Break-Even Timeline — companion to the affordability calculator, showing the crossover year where buying beats renting at a given DTI/down payment
 127. ⬜ Margin Call Distance Simulator — how far price has to move against an open position before margin level hits the broker's call threshold
 128. ⬜ Client Rate Increase Calculator — companion to profitability calculator: what raise closes the gap between a client's effective rate and target rate
+129. ⬜ Random Sequence Equity Curve Comparator — same win rate/R shown across several randomized trade orderings, to show sequence risk beyond the smoothed compounding view
+130. ⬜ Runway Extension Planner — companion to runway calculator: side-by-side impact of cutting a specific expense vs. adding a specific revenue amount
 
 ---
 
@@ -233,6 +235,8 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 | Mortgage Affordability Calculator | 10354012 | 22.08. 15:52 |
 | Margin & Leverage Calculator | 10354514 | 23.08. 11:03 |
 | Client Profitability Calculator | 10354516 | 24.08. 15:47 |
+| Trading Account Compounding Simulator | 10354594 | 25.08. 10:59 |
+| Runway Calculator | 10354595 | 26.08. 15:51 |
 
 ## Workflow (fix)
 
@@ -241,7 +245,7 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 128 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen, damit ~50 Einträge erhalten bleiben (Stand jetzt: 130 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
 8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets. Für Thumbnails bei v2-Sheets eigene Kompakt-Cover bauen statt das volle Sheet zu skalieren (siehe Hinweis im Charts & Visuals-Abschnitt).
 
