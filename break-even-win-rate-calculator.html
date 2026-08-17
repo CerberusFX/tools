@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Break-Even Win Rate Calculator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;
+    background:var(--line);outline:none;margin:6px 0 0
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--white);
+    box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--white);box-shadow:0 1px 5px rgba(30,27,46,.28);cursor:pointer
+  }
+  input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(30px,7vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+    border-top:1px solid #332C4D;padding-top:16px}
+  .split .k{font-size:11.5px;color:#8A82AD;margin:0}
+  .split .v{font-size:17px;font-weight:700;margin:3px 0 0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.easy{color:var(--green);font-weight:700}
+  td.hard{color:var(--red);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Break-Even Win Rate Calculator</h1>
+    <p class="sub">Know the exact win rate your reward-to-risk ratio requires before you judge whether a strategy is actually working.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="field">
+        <label class="flabel" for="reward"><span>Reward (take-profit)</span>
+          <span class="val"><input type="number" id="reward" value="2" min="0.1" step="0.1"><span class="unit">R</span></span>
+        </label>
+        <input type="range" id="reward_r" value="2" min="0.1" max="10" step="0.1" aria-label="Reward slider">
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="risk"><span>Risk (stop-loss)</span>
+          <span class="val"><input type="number" id="risk" value="1" min="0.1" step="0.1"><span class="unit">R</span></span>
+        </label>
+        <p class="hint">Usually left at 1 as the reference unit for the ratio.</p>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="actualwinrate"><span>Your actual win rate (optional)</span>
+          <span class="val"><input type="number" id="actualwinrate" value="0" min="0" max="100" step="1"><span class="unit">%</span></span>
+        </label>
+        <p class="hint">Leave at 0 to skip. Enter your real win rate to see your margin above/below break-even.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">BREAK-EVEN WIN RATE</p>
+        <p class="big"><span id="bewinrate">—</span>%</p>
+        <div class="split">
+          <div>
+            <p class="k">Reward-to-risk ratio</p>
+            <p class="v" id="rratio">—</p>
+          </div>
+          <div>
+            <p class="k">Your margin above/below</p>
+            <p class="v" id="margin">—</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Break-even win rate at common R:R ratios</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>R:R ratio</th><th>Break-even win rate</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Break-even win rate</b> = risk ÷ (reward + risk) × 100. This is the minimum win rate needed
+        for a strategy to break even before any actual edge, at a given reward-to-risk ratio.<br><br>
+        The relationship is inverse but not linear: doubling your reward-to-risk ratio doesn't halve the
+        required win rate — going from 1:1 to 2:1 drops break-even from 50% to 33.3%, but going from 2:1
+        to 4:1 only drops it from 33.3% to 20%. Diminishing returns kick in as the ratio grows.<br><br>
+        This calculation ignores spread, commission, and slippage — real transaction costs push the true
+        break-even win rate slightly higher than the theoretical number shown here.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Break-even math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){return document.getElementById(id);};
+
+  var pair = ['reward','reward_r'];
+  (function(){
+    var n = $(pair[0]), r = $(pair[1]);
+    n.addEventListener('input', function(){
+      var v = parseFloat(n.value);
+      if(!isNaN(v)) r.value = Math.min(Math.max(v, parseFloat(r.min)), parseFloat(r.max));
+      calc();
+    });
+    r.addEventListener('input', function(){ n.value = r.value; calc(); });
+  })();
+
+  ['risk','actualwinrate'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function beWinRate(reward, risk){
+    return (risk / (reward + risk)) * 100;
+  }
+
+  function calc(){
+    var reward = Math.max(0.1, num('reward', 2));
+    var risk = Math.max(0.1, num('risk', 1));
+    var actualwinrate = Math.max(0, Math.min(100, num('actualwinrate', 0)));
+
+    var be = beWinRate(reward, risk);
+    var ratio = reward / risk;
+
+    $('bewinrate').textContent = be.toFixed(1);
+    $('rratio').textContent = ratio.toFixed(2) + ':1';
+
+    if(actualwinrate > 0){
+      var margin = actualwinrate - be;
+      $('margin').textContent = (margin >= 0 ? '+' : '') + margin.toFixed(1) + ' pts';
+    } else {
+      $('margin').textContent = '—';
+    }
+
+    var rows = [];
+    var ratios = [
+      [1,1],[1.5,1],[2,1],[2.5,1],[3,1],[4,1],[1,2],[1,1.5]
+    ];
+    var yoursKey = reward.toFixed(1) + ':' + risk.toFixed(1);
+    if(ratios.every(function(r){ return (r[0].toFixed(1)+':'+r[1].toFixed(1)) !== yoursKey; })){
+      ratios.push([reward, risk]);
+    }
+    ratios.sort(function(a,b){ return (a[0]/a[1]) - (b[0]/b[1]); });
+
+    ratios.forEach(function(r){
+      var b = beWinRate(r[0], r[1]);
+      var isYours = (r[0].toFixed(1)+':'+r[1].toFixed(1)) === yoursKey;
+      var cls = b <= 40 ? 'easy' : (b >= 55 ? 'hard' : '');
+      rows.push('<tr><td>'+(r[0]/r[1]).toFixed(2)+':1'+(isYours?' (yours)':'')+'</td><td class="'+cls+'">'+b.toFixed(1)+'%</td></tr>');
+    });
+    $('tbody').innerHTML = rows.join('');
+
+    if(actualwinrate > 0){
+      var margin = actualwinrate - be;
+      if(margin >= 0){
+        $('advice').innerHTML = 'At a <b>' + ratio.toFixed(2) + ':1 reward-to-risk</b>, you need ' + be.toFixed(1) +
+          '% wins to break even. Your ' + actualwinrate + '% win rate clears that by <b>' + margin.toFixed(1) +
+          ' points</b> — positive edge before accounting for transaction costs.';
+      } else {
+        $('advice').innerHTML = 'At a <b>' + ratio.toFixed(2) + ':1 reward-to-risk</b>, you need ' + be.toFixed(1) +
+          '% wins to break even. Your ' + actualwinrate + '% win rate falls short by <b>' + Math.abs(margin).toFixed(1) +
+          ' points</b> — this setup is losing money on average at these numbers.';
+      }
+    } else {
+      $('advice').innerHTML = 'At a <b>' + ratio.toFixed(2) + ':1 reward-to-risk ratio</b>, you need a <b>' + be.toFixed(1) +
+        '% win rate</b> just to break even. Enter your actual win rate above to see exactly how much margin you have — or don\u2019t.';
+    }
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
