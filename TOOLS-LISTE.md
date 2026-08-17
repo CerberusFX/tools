@@ -23,7 +23,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 8. ✅ **Margin & Leverage Calculator** — benötigte Margin, freie Margin, Margin-Call-Level
 9. ✅ **Trading Account Compounding Simulator** — Kontowachstum bei fixem R pro Trade
 10. ✅ **Max Consecutive Loss Simulator** — wie wahrscheinlich eine Pechsträhne bei deiner Winrate ist
-11. ⬜ Break-Even Win Rate Calculator — nötige Trefferquote je R:R-Verhältnis
+11. ✅ **Break-Even Win Rate Calculator** — nötige Trefferquote je R:R-Verhältnis
 12. ⬜ Swap / Carry Cost Calculator — Haltekosten über Nacht und über Wochen
 13. ⬜ Trade Journal Stats Calculator — Winrate, Profit Factor, Ø-R aus eingegebenen Trades
 14. ⬜ Correlation Risk Checker — versteckte Klumpenrisiken bei mehreren offenen Positionen
@@ -35,7 +35,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 ## Persönliche Finanzen (19–32)
 
 19. ⬜ Real Wage Checker — Gehaltsentwicklung vs. Inflation seit Jahr X
-20. ⬜ Loan vs. Lease Comparison — Gesamtkosten und Effektivzins nebeneinander
+20. ✅ **Loan vs. Lease Comparison** — Gesamtkosten und Effektivzins nebeneinander
 21. ✅ **Debt Payoff Planner** — Avalanche vs. Snowball, Zinsen und Laufzeit im Vergleich
 22. ⬜ Emergency Fund Calculator — Zielgröße nach Fixkosten und Einkommensstabilität
 23. ✅ **Mortgage Affordability Calculator** — was du dir wirklich leisten kannst, nicht was die Bank sagt
@@ -81,7 +81,7 @@ Legende: ✅ live + Thread geplant · 🟡 gebaut, Thread offen · ⬜ offen
 
 51. ✅ **Impermanent Loss Calculator** — Verlust ggü. Halten bei Liquidity-Pool-Positionen
 52. ✅ **Staking Yield Calculator** — effektive APY nach Lock-up, Slashing-Risiko, Compound-Frequenz
-53. ⬜ DCA vs. Lump Sum Simulator — Durchschnittspreis-Strategie vs. Einmalanlage im Vergleich
+53. ✅ **DCA vs. Lump Sum Simulator** — Durchschnittspreis-Strategie vs. Einmalanlage im Vergleich
 54. ✅ **Gas Fee Impact Calculator** — wie stark Netzwerkgebühren kleine Trades auffressen
 55. ⬜ Portfolio Rebalancing Tool — Zielgewichtung vs. aktuelle Allokation, nötige Trades
 56. ✅ **Crypto Position Size Calculator** — analog zu Forex, aber mit Volatilitäts-Anpassung
@@ -188,7 +188,7 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 
 ---
 
-## Weitere Ideen (113–116, 121–136)
+## Weitere Ideen (113–116, 121–139)
 
 113. ⬜ "Anatomy of a Trade" Infographic — Entry, SL, TP, Trailing-Stop auf einem Beispiel-Chart visualisiert
 114. ⬜ Trendline Cheat Sheet — valid vs. invalid drawn trendlines, common mistakes
@@ -210,6 +210,9 @@ Alte Sheets (92–97, 101) bleiben im schlankeren v1-Stil bestehen, außer Frank
 134. ⬜ Winning Streak Confidence Checker — companion to the consecutive loss simulator: how many wins in a row can mislead you into overestimating a real edge
 135. ⬜ Real Wage Growth Visualizer — companion to inflation calculator: plots actual salary growth against inflation year by year to show real (not nominal) raise history
 136. ⬜ Margin Trend Tracker — companion to profit margin calculator: log margins period over period and flag when the gross-to-net gap is widening faster than revenue growth
+137. ⬜ Buy vs. Lease Break-Even Mileage Calculator — companion to loan vs lease: at what annual mileage does a lease's per-mile cost overtake ownership
+138. ⬜ Reward:Risk Sweet Spot Finder — companion to break-even win rate calculator: given a historical win rate, find the R:R ratio that maximizes expectancy
+139. ⬜ DCA Interval Optimizer — companion to DCA vs lump sum: compares weekly vs monthly vs quarterly DCA cadence for the same total investment
 
 ---
 
@@ -235,12 +238,12 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 
 | Tool | Draft-ID | Termin (Budapest-Zeit) |
 |---|---|---|
-| Expectancy Calculator | 10358686 | 27.08. 10:52 |
-| Customer Acquisition Cost Calculator | 10358689 | 28.08. 15:58 |
-| Crypto Position Size Calculator | 10358692 | 29.08. 11:07 |
 | Max Consecutive Loss Simulator | 10358897 | 30.08. 10:51 |
 | Inflation Impact Calculator | 10358899 | 31.08. 15:56 |
 | Profit Margin Calculator | 10358902 | 01.09. 11:04 |
+| Break-Even Win Rate Calculator | 10365741 | 02.09. 10:56 |
+| Loan vs Lease Comparison | 10365748 | 03.09. 15:49 |
+| DCA vs Lump Sum Simulator | 10365751 | 04.09. 11:12 |
 
 ## Workflow (fix)
 
@@ -249,7 +252,7 @@ Diese Ideen sind **Threads/Guides**, keine Rechner — laufen nicht durch den St
 3. Zwei Thumbnails (1280×720 + 600×600, Cerberus-Look, `t.me/CerberusFXTrading`)
 4. Typefully-Draft: Thumbnail an Post 1, Link nie im ersten Tweet, Mehrwert-Tipps im Thread, Hashtags nur im letzten Post, letzter Post = Recap + CTA
 5. Termin auf freien Queue-Slot legen, Uhrzeit leicht schwankend (nicht exakt 06:00 jeden Tag)
-6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen (proportional mehr bei größeren Batches), damit ~50 Einträge erhalten bleiben (Stand jetzt: 136 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
+6. Sobald 2 Tools verplant sind: 2 neue Ideen an die Liste anhängen (proportional mehr bei größeren Batches), damit ~50 Einträge erhalten bleiben (Stand jetzt: 139 Einträge über 9 Kategorien vorrätig, reicht für Wochen im Voraus)
 7. **Alle Posts, Threads und Grafik-Texte werden auf Englisch verfasst** — unabhängig davon, dass diese Liste selbst auf Deutsch geführt wird
 8. **Für Charts & Visuals-Einträge ab sofort: Layout-Template v2 verwenden** (`visuals/_template/cheatsheet-template-v2.svg`) — dichteres Premium-Format mit Key-Rules-Sidebar, 5-Step-Panels und 3-Box-Reihe statt der schlankeren v1-Sheets. Für Thumbnails bei v2-Sheets eigene Kompakt-Cover bauen statt das volle Sheet zu skalieren (siehe Hinweis im Charts & Visuals-Abschnitt).
 
