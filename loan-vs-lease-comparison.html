@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loan vs. Lease Comparison</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:340px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .subhead{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--accent-d);
+    text-transform:uppercase;margin:18px 0 10px}
+  .subhead:first-child{margin-top:0}
+
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .hint{font-size:11px;color:var(--muted);margin-top:4px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(24px,5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin:0}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .compare .box{background:rgba(255,255,255,.06);border-radius:10px;padding:14px}
+  .compare .box h4{margin:0 0 6px;font-size:11px;letter-spacing:.06em;color:#C9C2E8;text-transform:uppercase}
+  .compare .box .n{font-size:20px;font-weight:800;margin:0}
+  .compare .box .s{font-size:11.5px;color:#8A82AD;margin-top:4px}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Loan vs. Lease Comparison</h1>
+    <p class="sub">Total cost and effective monthly cost side by side — the two numbers that actually decide which option is cheaper for you.</p>
+  </header>
+
+  <div class="grid">
+
+    <form class="card" id="form" autocomplete="off">
+      <p class="subhead">Financing (loan)</p>
+      <div class="field">
+        <label class="flabel" for="price"><span>Vehicle price</span>
+          <span class="val"><input type="number" id="price" value="35000" min="0" step="500"><span class="unit">$</span></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="loandown"><span>Down payment</span>
+          <span class="val"><input type="number" id="loandown" value="3000" min="0" step="100"><span class="unit">$</span></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="rate"><span>Interest rate (APR)</span>
+          <span class="val"><input type="number" id="rate" value="6.5" min="0" max="25" step="0.1"><span class="unit">%</span></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="loanterm"><span>Loan term</span>
+          <span class="val"><input type="number" id="loanterm" value="60" min="12" max="96" step="6"><span class="unit">mo</span></span>
+        </label>
+      </div>
+
+      <p class="subhead">Leasing</p>
+      <div class="field">
+        <label class="flabel" for="leasedown"><span>Due at signing</span>
+          <span class="val"><input type="number" id="leasedown" value="2000" min="0" step="100"><span class="unit">$</span></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="leasepayment"><span>Monthly lease payment</span>
+          <span class="val"><input type="number" id="leasepayment" value="450" min="0" step="10"><span class="unit">$</span></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="leaseterm"><span>Lease term</span>
+          <span class="val"><input type="number" id="leaseterm" value="36" min="12" max="48" step="6"><span class="unit">mo</span></span>
+        </label>
+      </div>
+      <div class="field">
+        <label class="flabel" for="disposition"><span>End-of-lease fees</span>
+          <span class="val"><input type="number" id="disposition" value="350" min="0" step="50"><span class="unit">$</span></span>
+        </label>
+        <p class="hint">Disposition fee, excess mileage, wear charges — typical estimate.</p>
+      </div>
+    </form>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">CHEAPER OPTION (EFFECTIVE $/MONTH)</p>
+        <p class="big"><span id="winner">—</span></p>
+        <div class="compare">
+          <div class="box">
+            <h4>Loan</h4>
+            <p class="n" id="loanTotal">—</p>
+            <p class="s" id="loanMonthly">— effective $/mo</p>
+          </div>
+          <div class="box">
+            <h4>Lease</h4>
+            <p class="n" id="leaseTotal">—</p>
+            <p class="s" id="leaseMonthly">— effective $/mo</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Cost breakdown</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Option</th><th>Upfront</th><th>Monthly × term</th><th>Total cost</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Loan total cost</b> = down payment + (monthly payment × loan term), where monthly payment uses
+        the standard amortization formula. At the end, you own the vehicle — this total cost buys an asset,
+        not just usage.<br><br>
+        <b>Lease total cost</b> = due at signing + (monthly payment × lease term) + end-of-lease fees. At the
+        end, you own nothing — this total cost buys usage only, for a shorter period.<br><br>
+        <b>Effective $/month</b> = total cost ÷ term, letting you compare options with different lengths on
+        equal footing. This comparison ignores what the vehicle is worth at the end of a loan (resale value) —
+        for a full picture, factor in that a paid-off loan leaves you with an asset worth something, while a
+        lease leaves you with nothing to sell.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Comparison math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  var $ = function(id){return document.getElementById(id);};
+
+  ['price','loandown','rate','loanterm','leasedown','leasepayment','leaseterm','disposition'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(id, def){
+    var v = parseFloat($(id).value);
+    return isNaN(v) ? def : v;
+  }
+
+  function loanPayment(principal, annualRate, months){
+    var r = annualRate/100/12;
+    if(r === 0) return principal/months;
+    return principal * (r * Math.pow(1+r, months)) / (Math.pow(1+r, months) - 1);
+  }
+
+  function calc(){
+    var price = Math.max(0, num('price', 35000));
+    var loandown = Math.max(0, num('loandown', 3000));
+    var rate = Math.max(0, num('rate', 6.5));
+    var loanterm = Math.max(1, num('loanterm', 60));
+    var leasedown = Math.max(0, num('leasedown', 2000));
+    var leasepayment = Math.max(0, num('leasepayment', 450));
+    var leaseterm = Math.max(1, num('leaseterm', 36));
+    var disposition = Math.max(0, num('disposition', 350));
+
+    var principal = Math.max(0, price - loandown);
+    var monthlyLoanPayment = loanPayment(principal, rate, loanterm);
+    var loanTotal = loandown + monthlyLoanPayment * loanterm;
+    var loanEffectiveMonthly = loanTotal / loanterm;
+
+    var leaseTotal = leasedown + leasepayment * leaseterm + disposition;
+    var leaseEffectiveMonthly = leaseTotal / leaseterm;
+
+    $('loanTotal').textContent = usd0.format(loanTotal);
+    $('loanMonthly').textContent = usd2.format(loanEffectiveMonthly) + ' effective $/mo';
+    $('leaseTotal').textContent = usd0.format(leaseTotal);
+    $('leaseMonthly').textContent = usd2.format(leaseEffectiveMonthly) + ' effective $/mo';
+
+    var winnerIsLoan = loanEffectiveMonthly <= leaseEffectiveMonthly;
+    $('winner').textContent = (winnerIsLoan ? 'Loan' : 'Lease') + ' — ' +
+      usd2.format(Math.min(loanEffectiveMonthly, leaseEffectiveMonthly)) + '/mo';
+
+    $('tbody').innerHTML =
+      '<tr><td>Loan</td><td>'+usd0.format(loandown)+'</td><td>'+usd2.format(monthlyLoanPayment)+' × '+loanterm+'</td><td>'+usd0.format(loanTotal)+'</td></tr>' +
+      '<tr><td>Lease</td><td>'+usd0.format(leasedown)+'</td><td>'+usd2.format(leasepayment)+' × '+leaseterm+' + '+usd0.format(disposition)+' fees</td><td>'+usd0.format(leaseTotal)+'</td></tr>';
+
+    var diff = Math.abs(loanEffectiveMonthly - leaseEffectiveMonthly);
+    $('advice').innerHTML = (winnerIsLoan ? 'Financing' : 'Leasing') + ' comes out to <b>' +
+      usd2.format(diff) + '/month cheaper</b> on an effective-cost basis over these terms. Remember: the loan\u2019s ' +
+      'total cost buys you an asset you\u2019ll own at the end (with resale value), while the lease\u2019s total cost buys ' +
+      'only usage for the term — factor that difference in beyond the raw monthly numbers.';
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
