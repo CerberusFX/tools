@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stablecoin Yield Comparator</title>
+<style>
+  :root{
+    --ink:#1E1B2E; --ink-2:#403B57; --muted:#6E6A83;
+    --accent:#5B3FD6; --accent-d:#3A2599; --amber:#FFB020;
+    --panel:#F5F2FC; --line:#E4DEF4; --bg:#FCFBFE; --white:#fff;
+    --red:#D64545; --green:#2E9E6B;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:24px 18px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);margin:0 0 8px}
+  h1{font-size:clamp(24px,5vw,36px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{margin:0;color:var(--muted);font-size:15px;max-width:58ch}
+
+  .grid{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:820px){.grid{grid-template-columns:360px 1fr;align-items:start}}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+
+  .strategyrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--panel)}
+  .strategyrow-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .strategyrow-head input[type=text]{
+    border:none;background:transparent;font-size:13.5px;font-weight:700;color:var(--ink-2);
+    padding:2px 0;font-family:inherit;width:65%;
+  }
+  .removebtn{background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-weight:600;padding:2px 6px}
+  .sfields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sfield label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+  .sfield input{
+    width:100%;font-size:13px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--white);border-radius:6px;
+    padding:6px 6px;font-family:inherit;box-sizing:border-box;
+  }
+  .addbtn{
+    width:100%;padding:10px;border-radius:8px;border:1px dashed var(--accent);
+    background:transparent;color:var(--accent-d);font-weight:700;font-size:13px;
+    cursor:pointer;font-family:inherit;margin-top:4px
+  }
+  .addbtn:hover{background:var(--panel)}
+
+  .field{margin:16px 0}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .flabel span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .val{position:relative}
+  .val input[type=number]{
+    width:110px;text-align:right;font-size:14px;font-weight:700;color:var(--accent-d);
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;
+    padding:6px 32px 6px 8px;font-family:inherit;
+  }
+  .val .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-size:12px;color:var(--muted);pointer-events:none}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .result{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:18px}
+  .rlabel{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--amber);margin:0 0 6px}
+  .big{font-size:clamp(24px,5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin:0}
+
+  h2{font-size:15px;margin:26px 0 10px;letter-spacing:-.01em}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 6px;text-align:right;border-bottom:1px solid var(--line)}
+  th{font-size:10.5px;letter-spacing:.05em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:var(--panel)}
+  td.best{color:var(--green);font-weight:700}
+
+  .note{background:var(--panel);border-left:3px solid var(--amber);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink-2);margin-top:16px}
+
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent-d)}
+  details p{font-size:13px;color:var(--ink-2);max-width:64ch}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:14px;
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">FREE RESOURCE</p>
+    <h1>Stablecoin Yield Comparator</h1>
+    <p class="sub">The highest advertised APY isn't automatically the best deal once you weigh in the risk behind it.</p>
+  </header>
+
+  <div class="grid">
+
+    <div class="card">
+      <div id="strategylist"></div>
+      <button type="button" class="addbtn" id="addstrategy">+ Add another option</button>
+
+      <div class="field">
+        <label class="flabel" for="amount"><span>Amount to deploy</span>
+          <span class="val"><input type="number" id="amount" value="10000" min="0" step="500"><span class="unit">$</span></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="flabel" for="months"><span>Time horizon</span>
+          <span class="val"><input type="number" id="months" value="12" min="1" max="60" step="1"><span class="unit">mo</span></span>
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <div class="result">
+        <p class="rlabel">BEST RISK-ADJUSTED OPTION</p>
+        <p class="big" id="topoption">—</p>
+      </div>
+
+      <h2>Options compared</h2>
+      <div class="card" style="padding:0 16px">
+        <table>
+          <thead><tr><th>Option</th><th>Advertised APY</th><th>Risk-adj. APY</th><th>Est. earnings</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="advice">—</div>
+
+      <details>
+        <summary>How this is calculated</summary>
+        <p><b>Risk-adjusted APY</b> = advertised APY discounted by your entered risk %, compounded monthly.
+        The risk discount is a rough haircut meant to represent smart-contract risk, depeg risk, platform
+        solvency risk, and any lock-up illiquidity — not a scientific probability, but a way to compare
+        options on a more honest basis than headline APY alone.<br><br>
+        <b>Estimated earnings</b> = amount × ((1 + monthly risk-adjusted rate)^months − 1).<br><br>
+        A useful rule of thumb: a well-established, audited platform holding blue-chip stablecoins might
+        warrant a 5-15% discount. A new, unaudited, or unusually high-APY protocol warrants a much larger
+        discount — 30-60%+ isn't unreasonable for something offering yields far above the market average,
+        since unusually high yield is often compensation for unusually high risk.</p>
+      </details>
+
+      <footer>
+        <span>Not financial advice. Yield math only.</span>
+        <span>t.me/CerberusFXTrading</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  var $ = function(id){return document.getElementById(id);};
+
+  var defaultStrategies = [
+    {name:'CEX Lending', apy:5, risk:5},
+    {name:'Established DeFi Protocol', apy:9, risk:15},
+    {name:'New/High-Yield Protocol', apy:20, risk:40}
+  ];
+  var strategyCounter = 0;
+
+  function escapeAttr(s){
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  }
+
+  function renderRow(s, idx){
+    var row = document.createElement('div');
+    row.className = 'strategyrow';
+    row.dataset.idx = idx;
+    row.innerHTML =
+      '<div class="strategyrow-head">' +
+        '<input type="text" class="sname" value="' + escapeAttr(s.name) + '" aria-label="Option name">' +
+        '<button type="button" class="removebtn" aria-label="Remove option">Remove</button>' +
+      '</div>' +
+      '<div class="sfields">' +
+        '<div class="sfield"><label>Advertised APY %</label><input type="number" class="sapy" value="' + s.apy + '" min="0" step="0.5"></div>' +
+        '<div class="sfield"><label>Risk discount %</label><input type="number" class="srisk" value="' + s.risk + '" min="0" max="90" step="5"></div>' +
+      '</div>';
+    return row;
+  }
+
+  function initList(){
+    var list = $('strategylist');
+    list.innerHTML = '';
+    defaultStrategies.forEach(function(s, i){
+      list.appendChild(renderRow(s, i));
+    });
+    strategyCounter = defaultStrategies.length;
+    attachRowListeners();
+  }
+
+  function attachRowListeners(){
+    var list = $('strategylist');
+    list.querySelectorAll('input').forEach(function(inp){
+      inp.removeEventListener('input', calc);
+      inp.addEventListener('input', calc);
+    });
+    list.querySelectorAll('.removebtn').forEach(function(btn){
+      btn.onclick = function(){
+        var row = btn.closest('.strategyrow');
+        if(list.children.length > 1){
+          row.remove();
+          calc();
+        }
+      };
+    });
+  }
+
+  $('addstrategy').addEventListener('click', function(){
+    strategyCounter++;
+    var row = renderRow({name:'Option ' + strategyCounter, apy:8, risk:20}, strategyCounter);
+    $('strategylist').appendChild(row);
+    attachRowListeners();
+    calc();
+  });
+
+  ['amount','months'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+
+  function num(val, def){
+    var v = parseFloat(val);
+    return isNaN(v) ? def : v;
+  }
+
+  function calcOption(amount, apy, riskPct, months){
+    var monthlyRate = Math.pow(1 + apy/100, 1/12) - 1;
+    var adjustedMonthlyRate = monthlyRate * (1 - riskPct/100);
+    var finalValue = amount * Math.pow(1 + adjustedMonthlyRate, months);
+    var earnings = finalValue - amount;
+    var adjustedAPY = (Math.pow(1+adjustedMonthlyRate,12)-1)*100;
+    return {earnings: earnings, adjustedAPY: adjustedAPY};
+  }
+
+  function calc(){
+    var amount = Math.max(0, num($('amount').value, 10000));
+    var months = Math.max(1, Math.round(num($('months').value, 12)));
+
+    var rows = $('strategylist').querySelectorAll('.strategyrow');
+    var options = [];
+    rows.forEach(function(row){
+      var name = row.querySelector('.sname').value || 'Option';
+      var apy = Math.max(0, num(row.querySelector('.sapy').value, 0));
+      var risk = Math.max(0, Math.min(90, num(row.querySelector('.srisk').value, 0)));
+      var result = calcOption(amount, apy, risk, months);
+      options.push({name: name, apy: apy, risk: risk, adjustedAPY: result.adjustedAPY, earnings: result.earnings});
+    });
+
+    if(options.length === 0){
+      $('topoption').textContent = '—';
+      $('tbody').innerHTML = '';
+      $('advice').textContent = 'Add at least one option to compare.';
+      return;
+    }
+
+    var sorted = options.slice().sort(function(a,b){ return b.adjustedAPY - a.adjustedAPY; });
+    var top = sorted[0];
+
+    $('topoption').textContent = top.name + ' — ' + top.adjustedAPY.toFixed(1) + '% risk-adj. APY';
+
+    $('tbody').innerHTML = options.map(function(o){
+      var isTop = o === top;
+      return '<tr><td>'+o.name+'</td><td>'+o.apy.toFixed(1)+'%</td><td class="'+(isTop?'best':'')+'">'+o.adjustedAPY.toFixed(1)+'%</td><td>'+usd2.format(o.earnings)+'</td></tr>';
+    }).join('');
+
+    var highestNominal = options.slice().sort(function(a,b){return b.apy-a.apy;})[0];
+    if(highestNominal !== top){
+      $('advice').innerHTML = '<b>' + highestNominal.name + '</b> has the highest advertised APY (' + highestNominal.apy.toFixed(1) +
+        '%), but after risk-adjusting, <b>' + top.name + '</b> comes out ahead at ' + top.adjustedAPY.toFixed(1) +
+        '%. Chasing the headline number without discounting for risk is exactly how yield-seeking capital gets burned.';
+    } else {
+      $('advice').innerHTML = '<b>' + top.name + '</b> wins both on advertised APY and risk-adjusted APY here. Over ' + months +
+        ' months on ' + usd0.format(amount) + ', that\u2019s roughly ' + usd2.format(top.earnings) + ' in estimated earnings — treat the risk discount as a planning estimate, not a guarantee.';
+    }
+  }
+
+  initList();
+  calc();
+})();
+</script>
+</body>
+</html>
